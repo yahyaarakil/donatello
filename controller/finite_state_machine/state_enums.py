@@ -1,5 +1,5 @@
 from enum import Enum
-from .states.sleep import Sleep
+from .states import Sleep
 
 class State(Enum):
     SLEEP = Sleep
