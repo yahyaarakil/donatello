@@ -1,4 +1,4 @@
-from state import FiniteStateMachine
+from finite_state_machine import FiniteStateMachine
 import time
 
 def main():

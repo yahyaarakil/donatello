@@ -1,7 +1,8 @@
 from enum import Enum
+from .states.sleep import Sleep
 
 class State(Enum):
-    SLEEP = 0
+    SLEEP = Sleep
     IDLE = 1
     OPERATIONAL = 2
     MANUAL = 3
