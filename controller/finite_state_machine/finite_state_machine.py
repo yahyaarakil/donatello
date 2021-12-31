@@ -7,8 +7,12 @@ class MetaState:
     def __init__(self):
         self.stopped = False
 
-class FiniteStateMachine: 
+class FiniteStateMachine:
+    _instance = None
     def __init__(self):
+        if FiniteStateMachine._instance != None:
+            raise Exception("Finite State Machine is a Singleton!")
+        FiniteStateMachine._instance = self
         self._state = State.SLEEP
         self._meta_state = MetaState()
         self.fsm_thread = threading.Thread(target=self.run, name='fsm_thread', daemon=True)
