@@ -1,80 +1,51 @@
-import logging, time
-import websockets
-import asyncio
+import websocket
+import threading
+import time
+import rel
+import logging
 
 from .conf import *
-from .message import Message, MessageType
+from .message import MessageType, Message
 
-class Communication():
+class Communication:
+    def __init__(self, recv_callback=None):
+        self._recv_callback = recv_callback
+        rel.safe_read()
+        logging.info('Establishing connection to server')
+        self.ws = websocket.WebSocketApp(f'ws://{SERVER_ADDRESS}:{SERVER_PORT}',
+                                    on_open=self.on_open,
+                                    on_message=self.on_message,
+                                    on_error=self.on_error,
+                                    on_close=self.on_close)
+        self.listen_thread = threading.Thread(target=self.listen)
+        self.listen_thread.start()
 
-    def __init__(self, process_callback=None):
-        self.process_callback = process_callback
-        self._main_loop = asyncio.get_event_loop()
+    def on_message(self, ws, message):
+        if self._recv_callback:
+            self._recv_callback(Message.deserialize(message))
 
-        self.connection = self.connect()
-        self._stop_receive = False
+    def on_error(self, ws, error):
+        logging.error(error)
 
-        self._main_loop.run_until_complete(self._start_recv())
+    def on_close(self, ws, close_status_code, close_msg):
+        logging.info('Closing connection to server')
 
-    def connect(self):
-        connection = None
-        while True:
-            connection = self._main_loop.run_until_complete(self._establishConnection())
-            if connection:
-                break
-            logging.info('Attempting to re-establish connection to server')
-            time.sleep(10)
-        return connection
+    def on_open(self, ws):
+        logging.info('Established connection to server')
+
+    def listen(self):
+        try:
+            logging.info('Listening to messages from server')
+            self.ws.run_forever(dispatcher=rel)  # Set dispatcher to automatic reconnection
+            rel.dispatch()
+        except KeyboardInterrupt:
+            pass
+
+    def sendMessage(self, message: Message):
+        if type(message) != Message:
+            logging.error(f'Message of type {type(message)} cannot be sent, use {Message} instead')
+            return
+        self.ws.send(message.serialize())
 
     def __del__(self):
-        logging.debug('Running communications destructor')
-        self._stop_receive = True
-        self._main_loop.run_until_complete(self._close_connection())
-        logging.info('Closed connection to server')
-
-    async def _close_connection(self):
-        await self.connection.close()
-
-    async def _establishConnection(self):
-        try:
-            connection = await websockets.connect(f'ws://{SERVER_ADDRESS}:{SERVER_PORT}')
-            if connection.open:
-                logging.info('Established connection to server')
-                # retrieve token
-                # await self.sendMessage('')
-                return connection
-        except:
-            logging.error('Unable to establish connection to server')
-            return None
-
-    async def sendMessage(self, message: Message):
-        if type(message) != Message:
-            logging.error(f'Cannot send message of type {type(message)}, use {Message} instead')
-            return
-        try:
-            await self.connection.send(message.serialize())
-            logging.debug('Message sent')
-        except Exception as e:
-            logging.error('Unable to send message')
-            logging.error(e)
-
-    async def _start_recv(self):
-        task = self._main_loop.create_task(self._receiveMessage())
-        await asyncio.wait([task])
-        return task
-
-    async def _receiveMessage(self):
-        logging.debug('Listening to messages from server')
-        while True:
-            try:
-                message = await self.connection.recv()
-                if self.process_callback:
-                    self.process_callback(Message.deserialize(message))
-                logging.debug('Received message from server')
-            except websockets.exceptions.ConnectionClosed:
-                logging.error('Lost connection to server')
-                self.connect()
-            if self._stop_receive:
-                logging.debug('Stopping listening to messages from server')
-                break
-
+        self.ws.close()

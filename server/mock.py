@@ -4,8 +4,6 @@ import asyncio
 async def echo(websocket):
     try:
         print('User connected')
-        await websocket.send("""{"type": "MessageType.POST_COMMAND", "field": "", "payload": ""}""")
-        print("sent")
         while True:
             message = await websocket.recv()
             print(f"<<< {message}")
