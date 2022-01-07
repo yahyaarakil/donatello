@@ -1,0 +1,2 @@
+SERVER_ADDRESS='localhost'
+SERVER_PORT=5050
