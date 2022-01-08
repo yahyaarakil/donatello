@@ -9,18 +9,14 @@ def interface(message):
 def main():
     try:
         logging.basicConfig(level=logging.DEBUG)
-        # fsm = FiniteStateMachine() # ASYNC! (SEPARATE THREAD)
-        # time.sleep(5)
-        # fsm.meta_state.e.set()
+        fsm = FiniteStateMachine() # ASYNC! (SEPARATE THREAD)
         comm = Communication(recv_callback=interface) # ASYNC! (SEPARATE THREADING)
-        time.sleep(1)
-        print("DONE")
-        comm.sendMessage(Message(MessageType.POST_COMMAND, 'none', 'none', 'none'))
-        time.sleep(1)
-        comm.sendMessage(Message(MessageType.POST_COMMAND, 'none', 'none', 'none'))
+        comm.sendMessage(Message(MessageType.POST_COMMAND, 'SCHEDULE_START', '1641654194, CLEAN, MISSION_1', None))
+        comm.sendMessage(Message(MessageType.POST_TELEMETRY, 'GPS', '41.40338, 2.17403', 'my_token'))
         pass
     except KeyboardInterrupt:
         comm.stop()
+        fsm.stop()
         time.sleep(1)
 
 if __name__ == '__main__':
