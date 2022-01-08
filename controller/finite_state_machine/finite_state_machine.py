@@ -5,6 +5,7 @@ import threading
 
 class MetaState:
     def __init__(self):
+        self.e = threading.Event()
         self.stopped = False
 
 class FiniteStateMachine:
@@ -15,9 +16,12 @@ class FiniteStateMachine:
         FiniteStateMachine._instance = self
         self._state = State.SLEEP
         self._meta_state = MetaState()
-        self.fsm_thread = threading.Thread(target=self.run, name='fsm_thread', daemon=True)
+        self.fsm_thread = threading.Thread(target=self.run, name='fsm_thread')
         self.fsm_thread.start()
         
+    def awake(self):
+        self.meta_state.e.set()
+
     @property
     def state(self):
         return self._state.value
@@ -40,6 +44,10 @@ class FiniteStateMachine:
 
     def _update(self):
         self.state.update(self.meta_state)
+
+    def stop(self):
+        self.meta_state.stopped = True
+        self.fsm_thread.join()
 
     def run(self):
         while not self.meta_state.stopped:
