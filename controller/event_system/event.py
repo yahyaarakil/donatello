@@ -31,7 +31,7 @@ class Event:
 
     def evaluate_event(self, payload: dict):
         for condition in self.conditions:
-            if not condition.callback(*condition.args):
+            if not condition.callback(*([payload] + list(condition.args))):
                 return
         for effect in self.effects:
             effect.callback(*([payload] + list(effect.args)))

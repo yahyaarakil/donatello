@@ -1,7 +1,9 @@
 from .state_enums import State
 from .state_enums import OperationalState
 
-import threading
+import threading, logging
+
+logger = logging.getLogger('FSM')
 
 class MetaState:
     def __init__(self):
@@ -20,16 +22,18 @@ class FiniteStateMachine:
         self.fsm_thread.start()
         
     def awake(self):
+        logger.info('Waking up')
         self.meta_state.e.set()
 
     @property
     def state(self):
-        return self._state.value
+        return self._state
 
     @state.setter
     def state(self, value):
+        logger.debug(f'Going to {value}')
         self._state = value
-        self.state.start(self.meta_state)
+        self.state.value.start(self.meta_state)
         
     @property
     def meta_state(self):
@@ -43,7 +47,7 @@ class FiniteStateMachine:
         pass
 
     def _update(self):
-        self.state.update(self.meta_state)
+        self.state.value.update(self.meta_state)
 
     def stop(self):
         self.meta_state.stopped = True
