@@ -1,4 +1,0 @@
-INFO:root:Established connection to server
-INFO:root:Established connection to server
-INFO:root:Established connection to server
-INFO:root:Closed connection to server
