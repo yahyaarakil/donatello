@@ -167,3 +167,4 @@ system-boot.dmg
 .vscode
 **/__pycache__
 **/logs.txt
+**/test.py
