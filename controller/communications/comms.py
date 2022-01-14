@@ -11,6 +11,7 @@ logger = logging.getLogger('COMMUNICATION')
 class Communication(Router):
     def __init__(self) -> None:
         super().__init__()
+        self.stopped = False
         self._request_lock = threading.Lock()
         self._awaiting_response = False
         self._response_callback = None
@@ -20,6 +21,7 @@ class Communication(Router):
 
     def establish_connection(self):
         logger.info('Establishing connection to server')
+        self.listen_thread = None
         try:
             self.ws = create_connection(f'ws://{SERVER_ADDRESS}:{SERVER_PORT}')
             self.connected = True
@@ -64,7 +66,7 @@ class Communication(Router):
 
     def _re_establish_connection(self):
         logger.info(f'Attempting to re-establish connection to server')
-        while not self.connected:
+        while not self.connected and not self.stopped:
             if self.establish_connection():
                 break
             logger.info(f'Retrying in 10s')
@@ -78,7 +80,8 @@ class Communication(Router):
                 self.connected = False
                 logger.error(f'Dropped connection to server')
                 break
-        self._re_establish_connection()
+        if not self.stopped:
+            self._re_establish_connection()
 
     def _process_request_queue(self):
         self._request_lock.acquire()
@@ -111,4 +114,5 @@ class Communication(Router):
         if self.connected:
             self.ws.close()
             logger.info('Closed connection to server')
-        self.listen_thread.join()
+        self.stopped = True
+        logger.info('Communications exiting')

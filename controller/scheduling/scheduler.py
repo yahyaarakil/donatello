@@ -48,7 +48,7 @@ class Scheduler:
 
     def stop(self):
         self.scheduler_running = False
-        time.sleep(1)
+        time.sleep(0.1)
         self._event.set()
         self.thread.join()
 

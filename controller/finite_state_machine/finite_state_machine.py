@@ -48,9 +48,10 @@ class FiniteStateMachine:
 
     def stop(self):
         self.meta_state.running = False
-        self.fsm_thread.join()
+        self.awake()
 
     def run(self):
         while self.meta_state.running:
             self._meta_update()
             self._update()
+        logger.info('FSM exiting')
