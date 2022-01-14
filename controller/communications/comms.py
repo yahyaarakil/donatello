@@ -11,6 +11,7 @@ logger = logging.getLogger('COMMUNICATION')
 class Communication(Router):
     def __init__(self) -> None:
         super().__init__()
+        self._request_lock = threading.Lock()
         self._awaiting_response = False
         self._response_callback = None
         self._request_queue = []
@@ -42,20 +43,24 @@ class Communication(Router):
         return True
 
     def _executeRequest(self, request: Request, callback: FunctionType = None):
+        self._request_lock.acquire()
         self._awaiting_response = True
         self._response_callback = callback
         if self._sendMessage(request) == False:
             self._awaiting_response = False
             self._response_callback = None
             self._request_queue.insert(0, (request, callback))
+        self._request_lock.release()
 
     def makeRequest(self, request: Request, callback: FunctionType = None):
         if not self._awaiting_response:
             self._executeRequest(request, callback)
         else:
+            self._request_lock.acquire()
             self._request_queue.append((request, callback))
             if len(self._request_queue) > MAX_REQ_QUEUE_SIZE:
                 self._request_queue.pop(0)
+            self._request_lock.release()
 
     def _re_establish_connection(self):
         logger.info(f'Attempting to re-establish connection to server')
@@ -76,9 +81,11 @@ class Communication(Router):
         self._re_establish_connection()
 
     def _process_request_queue(self):
+        self._request_lock.acquire()
         if len(self._request_queue) > 0:
             request, callback = self._request_queue.pop(0)
             self._executeRequest(request, callback)
+        self._request_lock.release()
 
     def _recvMessage(self):
         message =  self.ws.recv()
