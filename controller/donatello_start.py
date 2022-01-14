@@ -6,6 +6,8 @@ class DDonatello(Donatello):
         super().__init__()
         self.msn = Mission()
 
+def printH():
+    print('hello')
+
 if __name__ == "__main__":
     donatello = DDonatello()
-    donatello.sch.schedule.once()
