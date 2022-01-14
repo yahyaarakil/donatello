@@ -52,6 +52,7 @@ class Communication(Router):
             self._awaiting_response = False
             self._response_callback = None
             self._request_queue.insert(0, (request, callback))
+        logger.debug('Request made')
         self._request_lock.release()
 
     def makeRequest(self, request: Request, callback: FunctionType = None):
@@ -99,11 +100,13 @@ class Communication(Router):
             return
         try:
             if isinstance(message, Request):
-                print(message)
                 self.invoke(message.method, message.path, message)
+                logger.debug('Request received')
             elif isinstance(message, Response):
+                logger.debug('Response received')
                 if self._response_callback:
                     self._response_callback(message)
+                    logger.debug('Response callback invoked')
                     self._response_callback = None
                 self._awaiting_response = False
                 self._process_request_queue()
