@@ -8,6 +8,7 @@ async def echo(websocket):
             message = await websocket.recv()
             print(f"<<< {message}")
 
+            message = message.replace('request', 'response')
             await websocket.send(message)
             print(f">>> {message}")
     
