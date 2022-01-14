@@ -18,7 +18,7 @@ class FiniteStateMachine:
         FiniteStateMachine._instance = self
         self._state = State.SLEEP
         self._meta_state = MetaState()
-        self.fsm_thread = threading.Thread(target=self.run, name='fsm_thread')
+        self.fsm_thread = threading.Thread(target=self.run)
         self.fsm_thread.start()
         
     def awake(self):
