@@ -4,6 +4,7 @@ from .state import State
 class Sleep(State):
     @staticmethod
     def start(meta_state):
+        meta_state.e.clear()
         meta_state.e.wait()
 
     @staticmethod
