@@ -6,9 +6,10 @@ import threading, logging
 logger = logging.getLogger('FSM')
 
 class MetaState:
-    def __init__(self):
+    def __init__(self, parent_fsm):
         self.e = threading.Event()
-        self.stopped = False
+        self.running = True
+        self.parent_fsm = parent_fsm
 
 class FiniteStateMachine:
     _instance = None
@@ -17,7 +18,7 @@ class FiniteStateMachine:
             raise Exception("Finite State Machine is a Singleton!")
         FiniteStateMachine._instance = self
         self._state = State.SLEEP
-        self._meta_state = MetaState()
+        self._meta_state = MetaState(self)
         self.fsm_thread = threading.Thread(target=self.run)
         self.fsm_thread.start()
         
@@ -31,17 +32,13 @@ class FiniteStateMachine:
 
     @state.setter
     def state(self, value):
-        logger.debug(f'Going to {value}')
+        logger.info(f'State: {value}')
         self._state = value
         self.state.value.start(self.meta_state)
         
     @property
     def meta_state(self):
         return self._meta_state
-
-    @meta_state.setter
-    def meta_state(self, value):
-        self._meta_state = value
 
     def _meta_update(self):
         pass
@@ -50,10 +47,10 @@ class FiniteStateMachine:
         self.state.value.update(self.meta_state)
 
     def stop(self):
-        self.meta_state.stopped = True
+        self.meta_state.running = False
         self.fsm_thread.join()
 
     def run(self):
-        while not self.meta_state.stopped:
+        while self.meta_state.running:
             self._meta_update()
             self._update()
