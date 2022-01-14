@@ -29,13 +29,16 @@ class Scheduler:
                 wait_time = next_task_time - now
                 if wait_time > 0:
                     self._lock.release()
-                    logging.debug(f'Waiting for {wait_time}')
+                    logging.debug(f'Waiting for {wait_time:.2f}')
                     self._event.clear()
                     self._event.wait(wait_time)
                 else:
-                    job, args, t = self._scheduled_tasks.pop(0)
-                    threading.Thread(target=job, args=args).start()
+                    job, args, t, recur = self._scheduled_tasks.pop(0)
                     self._lock.release()
+                    if recur > 0:
+                        now = datetime.timestamp(datetime.now())
+                        Scheduler._instance.schedule(job, args).every(recur)
+                    threading.Thread(target=job, args=args).start()
             else:
                 self._lock.release()
                 logging.debug(f'Waiting forever')
@@ -45,6 +48,7 @@ class Scheduler:
 
     def stop(self):
         self.scheduler_running = False
+        time.sleep(1)
         self._event.set()
         self.thread.join()
 
@@ -53,22 +57,32 @@ class Scheduler:
             self.job = job
             self.args = args
 
-        def once(self, t: Union[str, int, float]):
+        def _insert_task(self, t, recur=0):
             scheduler = Scheduler._instance
-            if isinstance(t, str):
-                t = datetime.timestamp(datetime.strptime(t, '%d/%m/%Y %H:%M'))
-            now = datetime.timestamp(datetime.now())
-            if t < now:
-                logger.error('Cannot schedule task to the past')
-                return
             i = 0
             scheduler._lock.acquire()
             while i < len(scheduler._scheduled_tasks) and t > scheduler._scheduled_tasks[i][2]:
                 i += 1
 
             logger.debug(f'Inserting task at {i}')
-            scheduler._scheduled_tasks.insert(i, (self.job, self.args, t))
+            scheduler._scheduled_tasks.insert(i, (self.job, self.args, t, recur))
             scheduler._lock.release()
             scheduler._event.set()
 
-        # def every(self, t: Union[str, int, float])
+        def once(self, t: Union[str, int, float]):
+            if isinstance(t, str):
+                t = datetime.timestamp(datetime.strptime(t, '%d/%m/%Y %H:%M'))
+            now = datetime.timestamp(datetime.now())
+            if t < now:
+                logger.error('Cannot schedule task to the past')
+                return
+            self._insert_task(t)
+
+        def after(self, t: int):
+            now = datetime.timestamp(datetime.now())
+            t += now
+            self._insert_task(t)
+
+        def every(self, t: int):
+            now = datetime.timestamp(datetime.now())
+            self._insert_task(t+now, t)
