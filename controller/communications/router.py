@@ -12,6 +12,10 @@ class Router:
             self.__dict__[method.split('.')[-1].lower()] = self._create_adder(method)
             self.__dict__['do_'+method.split('.')[-1].lower()] = self._create_doer(method)
 
+    def use(self, path: str, action: Union[FunctionType, Router]):
+        for method in Method:
+            self._create_adder(method)(path, action)
+
     def _create_adder(self, method):
         def adder(path: str, action: Union[FunctionType, Router]):
             if type(action) == Router or type(action) == FunctionType:
