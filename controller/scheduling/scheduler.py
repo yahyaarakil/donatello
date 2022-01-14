@@ -11,10 +11,10 @@ class Scheduler:
     def __init__(self) -> None:
         if Scheduler._instance:
             raise Exception('Scheduler is a singleton')
+        self._event = threading.Event()
         self.thread = threading.Thread(target=self._main_waiter)
         self._scheduled_tasks = []
         self._lock = threading.Lock()
-        self._event = threading.Event()
         self.scheduler_running = True
         self.thread.start()
         Scheduler._instance = self
@@ -26,17 +26,22 @@ class Scheduler:
             if len(self._scheduled_tasks) > 0:
                 now = datetime.timestamp(datetime.now())
                 next_task_time = self._scheduled_tasks[0][2]
-                wait = next_task_time - now
-                if wait > 0:
+                wait_time = next_task_time - now
+                if wait_time > 0:
                     self._lock.release()
-                    self._event.wait(wait)
+                    logging.debug(f'Waiting for {wait_time}')
+                    self._event.clear()
+                    self._event.wait(wait_time)
                 else:
-                    job, args, time = self._scheduled_tasks.pop(0)
+                    job, args, t = self._scheduled_tasks.pop(0)
                     threading.Thread(target=job, args=args).start()
                     self._lock.release()
             else:
                 self._lock.release()
+                logging.debug(f'Waiting forever')
+                self._event.clear()
                 self._event.wait()
+        logger.info('Scheduler exiting')
 
     def stop(self):
         self.scheduler_running = False
