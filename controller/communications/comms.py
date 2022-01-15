@@ -109,7 +109,7 @@ class Communication(Router):
             if isinstance(message, Request):
                 logger.debug('Request received')
                 response = Response()
-                self.invoke(message.method, message.path, message, response) # tree (recursive)
+                self.invoke(message, response) # tree (recursive)
                 self._sendMessage(response)
             elif isinstance(message, Response):
                 logger.debug('Response received')

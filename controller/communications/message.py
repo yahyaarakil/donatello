@@ -8,12 +8,6 @@ class Method(str, Enum):
     DELETE = 'DELETE'
     PUT = 'PUT'
 
-class Code(str, Enum):
-    C200 = 'OK'
-    C400 = 'BAD REQUEST'
-    C404 = 'NOT FOUND'
-    C500 = 'INTERNAL SERVER ERROR'
-
 class Message:
     def __init__(self, body: dict = None):
         if self.__class__ == Message:
@@ -39,12 +33,22 @@ class Request(Message):
         return json.dumps({ 'request': self.__dict__ })
 
 class Response(Message):
-    def __init__(self, code: Code = None, body: dict = None):
+    def __init__(self, code: int = None, body: dict = None):
         super().__init__(body=body)
         self.code = code
 
     def serialize(self):
-        return json.dumps({ 'request': self.__dict__ })
+        return json.dumps({ 'response': self.__dict__ })
+
+    def status(self, status: int):
+        self.code = status
+        return self
+
+    def json(self, obj: object):
+        self.body = json.dumps(obj)
+
+    def text(self, obj: object):
+        self.body = obj
 
 def deserialize(serialization: str):
     mesg = json.loads(serialization)

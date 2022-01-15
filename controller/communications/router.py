@@ -36,7 +36,8 @@ class Router:
             return action.__dict__['do_'+method.split('.')[-1].lower()]('.'.join(path.split('.')[1:]))
         return doer
 
-    def invoke(self, method: Method, path: str, request: Request, response: Response):
+    def invoke(self, request: Request, response: Response):
+        path, method = request.path, request.method
         action = self.__dict__['do_'+method.split('.')[-1].lower()](path)
         if isinstance(action, (FunctionType, MethodType)):
             action(request, response)
