@@ -1,6 +1,7 @@
 from typing import Union
 from types import FunctionType, MethodType
-from .message import Request, Method
+
+from .message import Request, Response, Method
 
 class Router:
     pass
@@ -32,12 +33,10 @@ class Router:
             
             action = self.methods_routing[method].get(path.split('.')[0], None)
 
-            if action == None:
-                return None
             return action.__dict__['do_'+method.split('.')[-1].lower()]('.'.join(path.split('.')[1:]))
         return doer
 
-    def invoke(self, method: Method, path: str, request: Request):
-        doer = self.__dict__['do_'+method.split('.')[-1].lower()](path)
-        if isinstance(doer, (FunctionType, MethodType)):
-            doer(request)
+    def invoke(self, method: Method, path: str, request: Request, response: Response):
+        action = self.__dict__['do_'+method.split('.')[-1].lower()](path)
+        if isinstance(action, (FunctionType, MethodType)):
+            action(request, response)

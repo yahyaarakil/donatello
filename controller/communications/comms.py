@@ -35,20 +35,27 @@ class Communication(Router):
         return self.connected
 
     def _sendMessage(self, message: Message):
+        self._request_lock.acquire()
         if not self.connected:
             logger.error(f'Unable to send message - No connection to server')
+            self._request_lock.release()
             return False
         if not isinstance(message, Message):
             logger.error(f'Unable to send message of type {type(message)}, use {Message} instead')
+            self._request_lock.release()
             return None # discard
         self.ws.send(message.serialize())
+        self._request_lock.release()
         return True
 
     def _executeRequest(self, request: Request, callback: FunctionType = None):
         self._request_lock.acquire()
         self._awaiting_response = True
         self._response_callback = callback
-        if self._sendMessage(request) == False:
+        self._request_lock.release()
+        send = self._sendMessage(request)
+        self._request_lock.acquire()
+        if send == False:
             self._awaiting_response = False
             self._response_callback = None
             self._request_queue.insert(0, (request, callback))
@@ -101,8 +108,9 @@ class Communication(Router):
         try:
             if isinstance(message, Request):
                 logger.debug('Request received')
-                self.invoke(message.method, message.path, message) # tree (recursive)
-                
+                response = Response()
+                self.invoke(message.method, message.path, message, response) # tree (recursive)
+                self._sendMessage(response)
             elif isinstance(message, Response):
                 logger.debug('Response received')
                 if self._response_callback:
