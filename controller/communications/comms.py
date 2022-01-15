@@ -112,6 +112,8 @@ class Communication(Router):
                 self._process_request_queue()
         except KeyError:
             logger.error(f'No function for method {message.method} on path {message.path}')
+        except Exception as e:
+            logger.fatal(f'Fatal error occured - {e}')
 
     def stop(self):
         if self.connected:

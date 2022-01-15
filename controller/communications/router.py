@@ -1,5 +1,5 @@
 from typing import Union
-from types import FunctionType
+from types import FunctionType, MethodType
 from .message import Request, Method
 
 class Router:
@@ -12,13 +12,13 @@ class Router:
             self.__dict__[method.split('.')[-1].lower()] = self._create_adder(method)
             self.__dict__['do_'+method.split('.')[-1].lower()] = self._create_doer(method)
 
-    def use(self, path: str, action: Union[FunctionType, Router]):
+    def use(self, path: str, action: Union[FunctionType, MethodType, Router]):
         for method in Method:
             self._create_adder(method)(path, action)
 
     def _create_adder(self, method):
-        def adder(path: str, action: Union[FunctionType, Router]):
-            if type(action) == Router or type(action) == FunctionType:
+        def adder(path: str, action: Union[FunctionType, MethodType, Router]):
+            if isinstance(action, (FunctionType, MethodType, Router)):
                 self.methods_routing[method][path] = action
             else:
                 raise Exception('Invalid action')
@@ -27,7 +27,7 @@ class Router:
     def _create_doer(self, method):
         def doer(path: str):
             action = self.methods_routing[method].get(path, None)
-            if type(action) == FunctionType:
+            if isinstance(action, (FunctionType, MethodType)):
                 return action
             
             action = self.methods_routing[method].get(path.split('.')[0], None)
@@ -39,5 +39,5 @@ class Router:
 
     def invoke(self, method: Method, path: str, request: Request):
         doer = self.__dict__['do_'+method.split('.')[-1].lower()](path)
-        if isinstance(doer, FunctionType):
+        if isinstance(doer, (FunctionType, MethodType)):
             doer(request)
