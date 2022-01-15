@@ -100,13 +100,14 @@ class Communication(Router):
             return
         try:
             if isinstance(message, Request):
-                self.invoke(message.method, message.path, message)
                 logger.debug('Request received')
+                self.invoke(message.method, message.path, message) # tree (recursive)
+                
             elif isinstance(message, Response):
                 logger.debug('Response received')
                 if self._response_callback:
-                    self._response_callback(message)
                     logger.debug('Response callback invoked')
+                    self._response_callback(message)
                     self._response_callback = None
                 self._awaiting_response = False
                 self._process_request_queue()

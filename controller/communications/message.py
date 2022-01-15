@@ -36,7 +36,7 @@ class Request(Message):
         self.path = path
 
     def serialize(self):
-        return 'request:'+super().serialize()
+        return json.dumps({ 'request': self.__dict__ })
 
 class Response(Message):
     def __init__(self, code: Code = None, body: dict = None):
@@ -44,15 +44,17 @@ class Response(Message):
         self.code = code
 
     def serialize(self):
-        return 'response:'+super().serialize()
+        return json.dumps({ 'request': self.__dict__ })
 
 def deserialize(serialization: str):
-    spec = serialization.split(':')[0].lower()
-    if spec == 'request':
-        mesg = Request()
-        serialization = serialization[len('request:'):]
-    elif spec == 'response':
-        serialization = serialization[len('response:'):]
-        mesg = Response()
-    mesg.__dict__ = json.loads(serialization)
-    return mesg
+    mesg = json.loads(serialization)
+    if len(mesg) < 1:
+        raise Exception('Invalid message json')
+    if list(mesg.keys())[0].lower() == 'request':
+        r = Request()
+    elif list(mesg.keys())[0].lower() == 'response':
+        r = Response()
+    else:
+        raise Exception('Invalid message json')
+    r.__dict__ = mesg[list(mesg.keys())[0]]
+    return r
