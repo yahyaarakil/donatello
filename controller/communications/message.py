@@ -46,9 +46,11 @@ class Response(Message):
 
     def json(self, obj: object):
         self.body = json.dumps(obj)
+        return self
 
     def text(self, obj: object):
         self.body = obj
+        return self
 
 def deserialize(serialization: str):
     mesg = json.loads(serialization)

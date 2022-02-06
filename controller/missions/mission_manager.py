@@ -1,18 +1,19 @@
 class MissionManager:
     def __init__(self) -> None:
+        self.missions = []
+
+    def get_current_mission(self, req, res):
         pass
 
-    def get_current_mission(self, req):
+    def get_mission_by_id(self, req, res):
         pass
 
-    def get_mission_by_id(self, req):
+    def get_all_mission(self, req, res):
         pass
 
-    def get_all_mission(self, req):
-        pass
+    def start_new_mission(self, req, res):
+        res.status(200).text('test')
+        print(req, res)
 
-    def start_new_mission(self, req):
-        pass
-
-    def schedule_new_mission(self, req):
+    def schedule_new_mission(self, req, res):
         pass
