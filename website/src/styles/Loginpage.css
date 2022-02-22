@@ -1,0 +1,17 @@
+.footer {
+ background-color: #f0df99;
+ color: #1a748e;
+ position: fixed;
+ width: 100%;
+ bottom: 0;
+}
+
+.footer > .nav-bar{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
