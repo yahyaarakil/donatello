@@ -27,3 +27,7 @@
 .nav-logo{
   height: 6vmin;
 }
+
+.nav-bar{
+  box-shadow: 0 0 12px rgba(33,33,33,.2);
+}
