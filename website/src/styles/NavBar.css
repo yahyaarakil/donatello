@@ -1,0 +1,29 @@
+/* https://colorpalettes.net/color-palette-373/ */
+.nav-bar > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #f0df99;
+}
+
+.nav-bar > ul > li {
+  float: right;
+}
+
+.nav-bar > ul > li > a {
+  display: block;
+  color: #1a748e;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav-bar > ul > li > a:hover {
+  background-color: #992915;
+  color: white;
+}
+
+.nav-logo{
+  height: 6vmin;
+}
