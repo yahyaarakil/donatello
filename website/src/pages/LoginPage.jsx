@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRef, useState, useEffect } from 'react';
+import "../styles/LoginPage.css"
 
 export const LoginPage = () => {
     const userRef = useRef();
