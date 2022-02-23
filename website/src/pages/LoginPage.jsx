@@ -48,7 +48,7 @@ export const LoginPage = () => {
                         </p>
                         <h1>Login</h1>
                         <form onSubmit={handleSubmit}>
-                            <label htmlFor="username">Username:</label>
+                            <label htmlFor="username"><i class="gg-user"></i>Username:</label>
                             <input
                                 type="text"
                                 id='username'
@@ -57,15 +57,17 @@ export const LoginPage = () => {
                                 onChange={(e) => setUser(e.target.value)}
                                 value={user}
                                 required
+                                placeholder="Username or Email"
                             />
 
-                            <label htmlFor="password">Password:</label>
+                            <label htmlFor="password"><i class="gg-password"></i>Password:</label>
                             <input
                                 type="password"
                                 id='password'
                                 onChange={(e) => setPwd(e.target.value)}
                                 value={pwd}
                                 required
+                                placeholder="Password"
                             />
                             <button>Login</button>
                         </form>
@@ -74,7 +76,7 @@ export const LoginPage = () => {
                             <br />
                             <div className='line'>
                                 {/* react router link here */}
-                                <a href='contact'>Contact Us</a>
+                                <a href='contact'><i class="gg-support"></i>Contact Us</a>
                             </div>
                         </p>
                     </div>
