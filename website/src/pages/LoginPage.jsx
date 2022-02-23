@@ -78,7 +78,7 @@ export const LoginPage = () => {
                         <form onSubmit={handleSubmit}>
 
                             <span className='allign-input-icon'>
-                                <i class="gg-user"></i>
+                                <i className="gg-user"></i>
                                 {/* <label htmlFor="username">Username:</label> */}
                             </span>
                             <input
@@ -93,7 +93,7 @@ export const LoginPage = () => {
                             />
 
                             <span className='allign-input-icon'>
-                                <i class="gg-password"></i>
+                                <i className="gg-password"></i>
                                 {/* <label htmlFor="password">Password:</label> */}
                             </span>
                             <input
@@ -106,15 +106,13 @@ export const LoginPage = () => {
                             />
                             <button>Login</button>
                         </form>
-                        <p className='forgot-password-contact-p'>
-                            Need an Account or Forgot password?
-                            <br />
-                            <div className='line'>
-                                {/* react router link here */}
-                                <i class="gg-support"></i>
-                                <a href='contact'>Contact Us</a>
-                            </div>
-                        </p>
+
+                        <p className='forgot-password-contact-p'>Need an Account or Forgot password?</p>
+                        <div className='line'>
+                            {/* react router link here */}
+                            <i className="gg-support"></i>
+                            <a href='contact'>Contact Us</a>
+                        </div>
                     </div>
                 )
             }
