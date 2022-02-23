@@ -46,7 +46,7 @@ export const LoginPage = () => {
                         <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>
                             {errMsg}
                         </p>
-                        <h1>Sign in</h1>
+                        <h1>Login</h1>
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="username">Username:</label>
                             <input
@@ -72,10 +72,10 @@ export const LoginPage = () => {
                         <p className='forgot-password-contact-p'>
                             Need an Account or Forgot password?
                             <br />
-                            <span className='line'>
+                            <div className='line'>
                                 {/* react router link here */}
                                 <a href='contact'>Contact Us</a>
-                            </span>
+                            </div>
                         </p>
                     </div>
                 )
