@@ -1,0 +1,81 @@
+
+body{
+    background-color: #f0df99;
+    margin: 2rem;
+    padding: 2rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-div {
+    background-color:#1a748e;
+    display: block;
+    width: 15rem;
+    border-radius: 0.50rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.login-div > h1{
+    color: white;
+    text-align: center;
+}
+
+form {
+    color: white;
+    font-size: 22px;
+    background-color: #1a748e;
+    display: flex;
+    width: 14rem;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+.forgot-password-contact-p{
+    font-size: 12px;
+    padding: 0.2rem;
+    color: white;
+}
+
+input[type="text"],
+input[type="password"],
+button,
+textarea {
+  font-size: 22px;
+  border-radius: 0.25rem;
+}
+button{
+    background-color:#55c4d7;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+input[type="text"],
+input[type="password"]{
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+button:hover{
+    box-shadow: 0 0 12px rgba(33,33,33,.5);
+}
+
+label,
+button {
+  margin-top: 1.25rem;
+}
