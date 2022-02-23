@@ -1,10 +1,10 @@
 import '../styles/HomePage.css';
-import LoginPage from './LoginPage';
+import InformationPage from './InformationPage';
 
 function HomePage() {
   return (
     <div className="HomePage">
-      <LoginPage/>
+      <InformationPage/>
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import React from "react";
 import InformativeCard from "./InformativeCard";
 import NavBar from "./NavBar";
-import "../styles/Loginpage.css"
+import "../styles/InformationPage.css"
 import donatelloLogo from "../images/donatello-logo.png"
 
-export default function LoginPage() {
+export default function InformationPage() {
     return (
         <>
             <NavBar />
