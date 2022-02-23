@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import { useRef, useState, useEffect } from 'react';
 import "../styles/LoginPage.css"
 
@@ -22,9 +24,35 @@ export const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(user, pwd);
-        setUser("");
-        setPwd("");
-        setSuccess(true);
+        try {
+            axios.post("http://localhost:3001/login",
+                {
+                    username: user,
+                    passw: pwd,
+                },
+                {
+                    headers: { "content-type": "application/json" }
+                }
+            )
+                .then(function (response) {
+                    if (response.data === "Helloo") {
+                        console.log("It's correct");
+                        setSuccess(true);
+                    }
+                })
+
+        } catch (err) {
+            if(!err?.response){
+                setErrMsg("No Server Response");
+            }
+            else if(err.response?.status === 400){
+                setErrMsg("Missing Username or Invalid Password!");
+            }
+            else{
+                setErrMsg("Login Failed");
+            }
+            errRef.current.focus();
+        }
     }
 
     return (
@@ -83,8 +111,8 @@ export const LoginPage = () => {
                             <br />
                             <div className='line'>
                                 {/* react router link here */}
-                                    <i class="gg-support"></i>
-                                    <a href='contact'>Contact Us</a>
+                                <i class="gg-support"></i>
+                                <a href='contact'>Contact Us</a>
                             </div>
                         </p>
                     </div>
