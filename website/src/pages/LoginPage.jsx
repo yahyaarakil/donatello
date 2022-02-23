@@ -42,7 +42,7 @@ export const LoginPage = () => {
                 </div>
             ) //else
                 : (
-                    <div>
+                    <div className='login-div'>
                         <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>
                             {errMsg}
                         </p>
