@@ -69,7 +69,7 @@ export const LoginPage = () => {
                             />
                             <button>Login</button>
                         </form>
-                        <p>
+                        <p className='forgot-password-contact-p'>
                             Need an Account or Forgot password?
                             <br />
                             <span className='line'>
