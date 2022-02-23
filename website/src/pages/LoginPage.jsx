@@ -67,7 +67,7 @@ export const LoginPage = () => {
                                 value={pwd}
                                 required
                             />
-                            <button>Sign in</button>
+                            <button>Login</button>
                         </form>
                         <p>
                             Need an Account or Forgot password?
