@@ -3,7 +3,6 @@ body{
     background-color: #f0df99;
     margin: 2rem;
     padding: 2rem;
-    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,10 +11,11 @@ body{
 .login-div {
     background-color:#1a748e;
     display: block;
-    width: 18rem;
+    width: 20rem;
     border-radius: 0.50rem;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     display: flex;
     flex-wrap: wrap;
 }
@@ -23,6 +23,8 @@ body{
 .login-div > h1{
     color: white;
     text-align: center;
+    padding: 0;
+    margin: 0;
 }
 
 form {
@@ -54,7 +56,7 @@ button{
     background-color:#55c4d7;
     border: none;
     color: white;
-    padding: 15px 32px;
+    padding: 1rem 2rem;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -69,6 +71,7 @@ input[type="password"]{
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    
 }
 
 button:hover{
@@ -81,17 +84,29 @@ button {
 }
 
 .line {
-    display: block;
     text-align: center;
     padding: 0.8rem 1rem;
-    
+    display: flex;
+    flex-direction: row;    
 }
 .line > a{
     text-decoration: none;
     display: block;
     color: white;
+    padding-left: 1rem;
 }
 
 .line > a:hover{
     box-shadow: 0 0 12px rgba(33,33,33,.5);
+}
+
+.allign-input-icon{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+.allign-input-icon > i {
+    margin-right: 10px;
+    margin-bottom:5px;
 }

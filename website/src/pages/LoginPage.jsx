@@ -31,7 +31,7 @@ export const LoginPage = () => {
 
         <>
             {/* if logged in */}
-            {success ? ( 
+            {success ? (
                 <div>
                     <h1>You are Logged in!</h1>
                     <br />
@@ -48,7 +48,11 @@ export const LoginPage = () => {
                         </p>
                         <h1>Login</h1>
                         <form onSubmit={handleSubmit}>
-                            <label htmlFor="username"><i class="gg-user"></i>Username:</label>
+
+                            <span className='allign-input-icon'>
+                                <i class="gg-user"></i>
+                                {/* <label htmlFor="username">Username:</label> */}
+                            </span>
                             <input
                                 type="text"
                                 id='username'
@@ -60,7 +64,10 @@ export const LoginPage = () => {
                                 placeholder="Username or Email"
                             />
 
-                            <label htmlFor="password"><i class="gg-password"></i>Password:</label>
+                            <span className='allign-input-icon'>
+                                <i class="gg-password"></i>
+                                {/* <label htmlFor="password">Password:</label> */}
+                            </span>
                             <input
                                 type="password"
                                 id='password'
@@ -76,12 +83,12 @@ export const LoginPage = () => {
                             <br />
                             <div className='line'>
                                 {/* react router link here */}
-                                <a href='contact'><i class="gg-support"></i>Contact Us</a>
+                                    <i class="gg-support"></i>
+                                    <a href='contact'>Contact Us</a>
                             </div>
                         </p>
                     </div>
                 )
-
             }
         </>
     )
