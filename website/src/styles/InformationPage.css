@@ -1,12 +1,12 @@
 .footer {
  background-color: #f0df99;
- color: #1a748e;
+ color: black;
  position: fixed;
  width: 100%;
  bottom: 0;
 }
 
-.footer > .nav-bar{
+.footer-nav-bar{
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -15,3 +15,28 @@
     justify-content: center;
     align-items: center;
 }
+
+.footer-nav-bar > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f0df99;
+    display:flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.footer-nav-bar > ul > li > a {
+    display: block;
+    color: #1a748e;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+
+.footer-nav-bar > ul > li > a:hover {
+    background-color: #992915;
+    color: white;
+  }

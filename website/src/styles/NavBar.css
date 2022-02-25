@@ -1,4 +1,9 @@
 /* https://colorpalettes.net/color-palette-373/ */
+
+.nav-bar{
+  box-shadow: 0 0 12px rgba(33,33,33,.2);
+}
+
 .nav-bar > ul {
   list-style-type: none;
   margin: 0;
@@ -28,6 +33,3 @@
   height: 6vmin;
 }
 
-.nav-bar{
-  box-shadow: 0 0 12px rgba(33,33,33,.2);
-}

@@ -6,7 +6,7 @@ import LoginPage  from './pages/LoginPage';
 
 ReactDOM.render(
   <React.StrictMode>
-    <LoginPage />
+    <HomePage />
   </React.StrictMode>,
   document.getElementById('root')
 );
