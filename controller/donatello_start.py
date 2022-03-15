@@ -24,7 +24,15 @@ import logging, time
 if __name__ == "__main__":
     logging.basicConfig(level="DEBUG")
     ardu = Ardu()
-    ardu.disarm()
+    # ardu.arm()
+    # ardu.set_home((35.36316936246472, 33.11961807818279, 50))
+    # # ardu.return_to_launch()
+    # # ardu.change_mode('GUIDED')
+    # ardu.change_mode('RTL')
+    # ardu.get_position()
+
+    # ardu.go_to_global((35.363766620836216, 33.11955332648672, 0))
+    # ardu.set_fence(((35.36316936246472, 33.11961807818279, 50), ))
     # donatello = DDonatello()
     # donatello.com.makeRequest(Request(Method.POST, 'mission.now', {'mission': 'none'}))
     # # donatello.com.makeRequest(Request(Method.GET, 'mission.current', {'mission': 'none'}))

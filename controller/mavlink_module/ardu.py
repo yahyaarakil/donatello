@@ -1,6 +1,8 @@
 from pymavlink import mavutil
 import logging
 from .conf import *
+from .parameters import param_dict
+import fnmatch, math, time, struct
 
 logger = logging.getLogger('MAVLINK')
 
@@ -8,22 +10,117 @@ class Ardu:
     def __init__(self):
         self.connection = mavutil.mavlink_connection(ARDUPILOT_ADDRESS)
         if self.connection.wait_heartbeat(timeout=5):
-            logging.info('Connected to ardupilot')
+            logging.info('Connected to ArduPilot')
+            logging.info('Setting parameters')
+            self.set_parameters()
         else:
             logging.critical('Cannot establish communication with ArduPilot')
             raise Exception()
 
-    def _long_req(self, args):
+    def _long_req(self, args, res_type='COMMAND_ACK'):
         try:
             self.connection.mav.command_long_send(
                 self.connection.target_system,
                 self.connection.target_component, 
                 *args
             )
-            return self.connection.recv_match(type='COMMAND_ACK', blocking=True)
+            return self.connection.recv_match(type=res_type, blocking=True)
         except Exception as e:
             logging.error('Ardupilot command failed')
             raise e
+
+    def go_to_global(self, gps_coordinate):
+        self.connection.mav.send(
+            mavutil.mavlink.MAVLink_set_position_target_global_int_message(
+                10,
+                self.connection.target_system,
+                self.connection.target_component,
+                mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+                int(0b110111111000),
+                int(gps_coordinate[0] * 10**7), # latitude
+                int(gps_coordinate[1] * 10**7), # longitude
+                1, # altitude,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            )
+        )
+        logging.info(f'Going to {gps_coordinate}')
+
+    # def set_includion_fence(self, fence_points):
+    #     if self._long_req((
+    #         mavutil.mavlink.MAV_CMD_DO_FENCE_ENABLE,
+    #         0,
+    #         1,
+    #         0,
+    #         0,
+    #         0,
+    #         0,
+    #         0,
+    #         0,
+    #     )):
+    #         logging.info('Fence enabled')
+    #         for point in fence_points:
+    #             pass
+    #     else:
+    #         raise Exception()
+
+    def change_mode(self,mode):
+        # Check if mode is available
+        if mode not in self.connection.mode_mapping():
+            logger.error(f'Unknown mode : {mode}')
+            return
+
+        # Get mode ID
+        mode_id = self.connection.mode_mapping()[mode]
+
+        self.connection.mav.set_mode_send(
+            self.connection.target_system,
+            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+            mode_id,
+        )
+        # Wait for ACK command
+        if self.connection.recv_match(type="COMMAND_ACK", blocking=True).result != 0:
+            logging.error(f'Failed to set mode to {mode}')
+        else:
+            logging.info(f'Mode set to {mode}')
+
+    def return_to_launch(self):
+        if self._long_req((
+            mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+        )).result != 0:
+            logging.error('Can NOT RTL')
+        else:
+            logging.info('RTL')
+
+    def set_home(self, gps_coordinate):
+        if self._long_req((
+            mavutil.mavlink.MAV_CMD_DO_SET_HOME,
+            0,
+            0,
+            0,
+            0,
+            0,
+            gps_coordinate[0], # latitude
+            gps_coordinate[1], # longitude
+            gps_coordinate[2], # altitiude
+        )).result != 0:
+            logging.error('Can NOT set ArduPilot home')
+        else:
+            logging.info('ArduPilot home set')
 
     def _arm(self, arm_disarm):
         if self._long_req((
@@ -42,13 +139,54 @@ class Ardu:
     def arm(self):
         try:
             self._arm(1)
-            logging.info('ArduPilot Armed')
+            logging.info('Armed')
         except:
-            logging.error('Failed to arm ArduPilot')
+            logging.error('Failed to arm')
 
     def disarm(self):
         try:
             self._arm(0)
-            logging.info('ArduPilot Disarmed')
+            logging.info('Disarmed')
         except:
-            logging.error('Failed to disarm ArduPilot')
+            logging.error('Failed to disarm')
+
+    # lat long lat
+    def get_position(self):
+        gps = self.connection.messages['GPS_RAW_INT']
+        return (gps.lat, gps.lon, gps.alt)
+
+    def get_battery_percentage(self):
+        return self.connection.messages['SYS_STATUS'].battery_remaining
+
+    def get_battery_voltage(self):
+        return self.connection.messages['SYS_STATUS'].voltage_battery
+
+    def _mavset(self, name, value, parm_type=None, retries=3):
+        got_ack = False
+
+        while retries > 0 and not got_ack:
+            retries -= 1
+            self.connection.mav.param_set_send(
+                self.connection.target_system,
+                self.connection.target_component,
+                name.encode('utf8'),
+                value,
+                parm_type
+            )
+            tstart = time.time()
+            while time.time() - tstart < 1:
+                ack = self.connection.recv_match(type='PARAM_VALUE', blocking=True)
+                if str(name).upper() == str(ack.param_id).upper():
+                    got_ack = True
+                    break
+        if not got_ack:
+            return False
+        return True
+
+    def set_parameters(self):
+        for param_key, param_value in param_dict.items():
+            logging.info(f"Setting parameter {param_key} to {param_value['val']}")
+            if self._mavset(param_key, param_value['val'], param_value['type'], 1):
+                logging.info('Parameter set')
+            else:
+                logging.error('Could not set parameter')
