@@ -1,0 +1,28 @@
+.informative-card{
+    width: 300px;
+    min-width: 300px;
+    max-height: 300px;
+    min-height: 300px;
+    font-size: 12px;
+    background-color:#f0df99;
+    border-radius: 9px;
+}
+
+.informative-card:hover{
+    box-shadow: 0 0 12px rgba(33,33,33,.2);
+}
+
+.info-list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-list > li{
+    padding: 10px;
+
+}
