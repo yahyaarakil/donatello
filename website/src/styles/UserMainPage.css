@@ -10,7 +10,7 @@
 
 .main {
     width: 60%;
-    height:20rem;
+    height:38rem;
 }
 
 .sidebar {
@@ -57,3 +57,13 @@
     padding: 10px;
 
 }
+
+.leaflet-container {
+
+    width: 100%;
+    height: 100%;
+  }
+
+  .sr-only {
+    display: none;
+  }

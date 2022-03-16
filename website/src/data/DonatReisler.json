@@ -1,0 +1,30 @@
+[{   
+    "name": "Mustafa",
+    "surname": "Aygün",
+    "country": "Turkey",
+    "battery": "%100",
+    "missionPercentage": "%10",
+    "lat": 35.247429533380576, 
+    "lng":33.024402051532775
+
+},
+{   
+    "name": "Oğuz Kağan",
+    "surname": "Altaş",
+    "country": "Turkey",
+    "battery": "%100",
+    "missionPercentage": "%20",
+    "lat": 35.244775807628045, 
+    "lng":33.04139992288361 
+
+},
+{   
+    "name": "Yahya",
+    "surname": "Arakil",
+    "country": "Syria",
+    "battery": "%100",
+    "missionPercentage": "%30",
+    "lat": 35.254177295587645, 
+    "lng":33.03240835867564
+
+}]

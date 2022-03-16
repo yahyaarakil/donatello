@@ -1,7 +1,9 @@
 import React from "react";
 import "../styles/UserMainPage.css";
 import donatelloLogo from "../images/donatello-logo.png";
-
+import { MapContainer, TileLayer, FeatureGroup, Popup, Marker } from 'react-leaflet';
+import L from "leaflet";
+import donatReisler from "../data/DonatReisler.json"; 
 
 
 export const UserMainPage = () => {
@@ -13,7 +15,7 @@ export const UserMainPage = () => {
             <NavigationBar />
             <div class="wrapper">
                 <div class="main">
-                    Main content
+                    <Map/>
                 </div>
                 <div class="sidebar">
                     <Body />
@@ -70,6 +72,50 @@ function Container(props) {
 }
 
 
+const marker = new L.icon({ iconUrl: donatelloLogo, iconSize: [48, 26] });
+
+function DonatReisICerik(props) {
+  return (
+    <>
+      <ul>
+        <li>
+          {props.props.name}
+        </li>
+        <li>
+          mission completed: {props.props.missionPercentage}
+        </li>
+        <li>
+          current coordinates: {props.props.lat} {props.props.lng}
+        </li>
+      </ul>
+    </>
+  );
+}
+
+function Map() {
+    
+    return (
+        <MapContainer center={[35.247051, 33.024617]} zoom={12}>
+            <FeatureGroup>
+            </FeatureGroup>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
+        />
+        
+        {donatReisler.map((reis, idx) => <Marker
+          position={[reis.lat, reis.lng]}
+          icon={marker}
+          key={idx}
+        >
+          <Popup>
+            <DonatReisICerik props={reis}/>
+            
+          </Popup>
+        </Marker>)}
+      </MapContainer>
+      );
+  }
 
 
 export default UserMainPage;
