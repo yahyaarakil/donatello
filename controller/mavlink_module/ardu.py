@@ -13,6 +13,9 @@ class Ardu:
             logging.info('Connected to ArduPilot')
             logging.info('Setting parameters')
             self.set_parameters()
+            self.set_home(HOME_COORDINATES)
+            self.disarm()
+            self.change_mode('GUIDED')
         else:
             logging.critical('Cannot establish communication with ArduPilot')
             raise Exception()
