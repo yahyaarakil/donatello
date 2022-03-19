@@ -1,3 +1,7 @@
+from finite_state_machine.state_enums import State
+from .mission import Mission
+from finite_state_machine import FiniteStateMachine, MetaState
+
 class MissionManager:
     def __init__(self) -> None:
         self.missions = []
@@ -17,3 +21,8 @@ class MissionManager:
 
     def schedule_new_mission(self, req, res):
         pass
+
+    def run_mission(self, mission: Mission, meta_state: MetaState):
+        meta_state.path = mission.path
+        meta_state.parent_fsm.state = State.Moving
+    

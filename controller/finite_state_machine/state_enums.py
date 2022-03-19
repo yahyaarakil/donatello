@@ -1,11 +1,10 @@
 from enum import Enum
-from .states import Sleep, Idle, Starting
+from .states import *
 
 class State(Enum):
-    STARTING = Starting
     SLEEP = Sleep
     IDLE = Idle
-    IN_MISSION = 2
+    MOVING_AUTO = Moving
     MANUAL = 3
     RADIO = 4
     CHARGING = 5

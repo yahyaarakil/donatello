@@ -1,10 +1,10 @@
 import threading
 from .state import State
 
-class Starting(State):
+class Moving(State):
     @staticmethod
     def start(meta_state):
-        pass
+        meta_state.is_moving = False
 
     @staticmethod
     def update(meta_state):

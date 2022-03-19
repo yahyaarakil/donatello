@@ -20,9 +20,21 @@ class DDonatello(Donatello):
         self.scheduleMissionRouter.get('', self.msn.get_mission_by_id)
         self.com.use('mission', self.scheduleMissionRouter)
 
+        self.com.post('awake', self.fsm.awake)
+
 if __name__ == "__main__":
     logging.basicConfig(level="DEBUG")
 
     donatello = DDonatello()
+    donatello.msn.run_mission(
+        Mission(
+            pattern=[
+                (35.364147, 33.118160),
+                (35.364391, 33.119475),
+                (35.363998, 33.120464)
+            ]
+        ),
+        donatello.fsm.meta_state
+    )
     # donatello.com.makeRequest(Request(Method.POST, 'mission.now', {'mission': 'none'}))
     # # donatello.com.makeRequest(Request(Method.GET, 'mission.current', {'mission': 'none'}))
