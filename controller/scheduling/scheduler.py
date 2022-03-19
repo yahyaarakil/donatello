@@ -29,7 +29,7 @@ class Scheduler:
                 wait_time = next_task_time - now
                 if wait_time > 0:
                     self._lock.release()
-                    logging.debug(f'Waiting for {wait_time:.2f}')
+                    logger.debug(f'Waiting for {wait_time:.2f}')
                     self._event.clear()
                     self._event.wait(wait_time)
                 else:
@@ -41,7 +41,7 @@ class Scheduler:
                     threading.Thread(target=job, args=args).start()
             else:
                 self._lock.release()
-                logging.debug(f'Waiting forever')
+                logger.debug(f'Waiting forever')
                 self._event.clear()
                 self._event.wait()
         logger.info('Scheduler exiting')
