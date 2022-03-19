@@ -13,5 +13,4 @@ class Donatello:
 
     def stop(self):
         self.com.stop()
-        self.fsm.stop()
         self.sch.stop()
