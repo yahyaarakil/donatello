@@ -10,6 +10,7 @@ class Donatello:
         self.fsm = FiniteStateMachine() # ASYNC
         self.com = Communication() # ASYNC
         self.sch = Scheduler() # ASYNC
+        
         self.ardu = Ardu() # SYNC!
 
     def stop(self):
