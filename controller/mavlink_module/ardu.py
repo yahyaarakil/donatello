@@ -1,6 +1,6 @@
 from pymavlink import mavutil
 import logging
-from .conf import *
+from config import ARDU
 from .parameters import param_dict
 import fnmatch, math, time, struct
 
@@ -19,7 +19,7 @@ class Ardu:
             self.connect()
 
     def connect(self):
-        self.connection = mavutil.mavlink_connection(ARDUPILOT_ADDRESS)
+        self.connection = mavutil.mavlink_connection(ARDU['ARDUPILOT_ADDRESS'])
         if self.connection.wait_heartbeat(timeout=5):
             self.connected_p()
 
@@ -28,7 +28,7 @@ class Ardu:
         logger.info('Connected to ArduPilot')
         logger.info('Setting parameters')
         self.set_parameters()
-        self.set_home(HOME_COORDINATE)
+        self.set_home(ARDU['HOME_COORDINATE'])
         self.disarm()
         self.change_mode('GUIDED')
 
