@@ -17,23 +17,36 @@ class DDonatello(Donatello):
         self.scheduleMissionRouter.get('', self.msn.get_mission_by_id)
         self.com.use('mission', self.scheduleMissionRouter)
 
-if __name__ == "__main__":
-    logging.basicConfig(level="DEBUG")
-
-    donatello = DDonatello()
-    # e = threading.Event()
-    # e.clear()
-    # e.wait()
-
-
-    donatello.msn.run_mission(
-        Mission(
-            pattern=[
-                (35.364147, 33.118160),
-                (35.364391, 33.119475),
-                (35.363998, 33.120464)
-            ]
+        self.com.post('command.stop',
+            lambda req, res: (
+                res.status(200).text('Stopped'),
+                self.stop()
+            )
         )
-    )
+
+if __name__ == "__main__":
+    try:
+        logging.basicConfig(level="DEBUG")
+
+        donatello = DDonatello()
+        # e = threading.Event()
+        # e.clear()
+        # e.wait()
+
+
+        donatello.msn.run_mission(
+            Mission(
+                pattern=[
+                    (35.364147, 33.118160),
+                    (35.364391, 33.119475),
+                    (35.363998, 33.120464)
+                ]
+            )
+        )
+
+        donatello.com.makeRequest(Request(Method.POST, 'command.stop', {}))
+    except Exception as e:
+        donatello.logger.error(e.with_traceback())
+
     # donatello.com.makeRequest(Request(Method.POST, 'mission.now', {'mission': 'none'}))
     # # donatello.com.makeRequest(Request(Method.GET, 'mission.current', {'mission': 'none'}))

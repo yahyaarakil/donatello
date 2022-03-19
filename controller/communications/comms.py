@@ -23,7 +23,7 @@ class Communication(Router):
         logger.info('Establishing connection to server')
         self.listen_thread = None
         try:
-            self.ws = create_connection(f'ws://{SERVER_ADDRESS}:{SERVER_PORT}')
+            self.ws = create_connection(f'{WEB_PROTOCOL}://{SERVER_ADDRESS}:{SERVER_PORT}')
             self.connected = True
             self.listen_thread = threading.Thread(target=self._listen)
             self.listen_thread.start()

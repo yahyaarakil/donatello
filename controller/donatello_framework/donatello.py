@@ -5,12 +5,12 @@ from scheduling import Scheduler
 
 class Donatello:
     def __init__(self) -> None:
-        logging.basicConfig(level='DEBUG')
-        # self.fsm = FiniteStateMachine() # ASYNC
+        self.logger = logging.getLogger('DONATELLO')
         self.com = Communication() # ASYNC
         self.sch = Scheduler() # ASYNC
         self.ardu = Ardu() # SYNC!
 
     def stop(self):
+        self.logger.info('Stopping Donatello')
         self.com.stop()
         self.sch.stop()
