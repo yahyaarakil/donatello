@@ -68,7 +68,7 @@ class Communication(Router):
         else:
             self._request_lock.acquire()
             self._request_queue.append((request, callback))
-            if len(self._request_queue) > MAX_REQ_QUEUE_SIZE:
+            if len(self._request_queue) > COMS['MAX_REQ_QUEUE_SIZE']:
                 self._request_queue.pop(0)
             self._request_lock.release()
 
