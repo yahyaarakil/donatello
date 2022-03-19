@@ -1,8 +1,10 @@
+from scheduling.scheduler import Scheduler
 from .mission import Mission
 
 class MissionManager:
-    def __init__(self) -> None:
+    def __init__(self, donatello) -> None:
         self.missions = []
+        self.donatello = donatello
 
     def get_current_mission(self, req, res):
         pass
@@ -18,8 +20,11 @@ class MissionManager:
         print(req, res)
 
     def schedule_new_mission(self, req, res):
-        pass
+        self.donatello.sch.schedule(self.run_mission, (Mission(req.body['pattern']),)).once(req.body['time'])
+        res.status(200).text('Mission Scheduled')
 
     def run_mission(self, mission: Mission):
+        print('Starting mission')
         self.current_mission = mission
+        self.donatello.e.set()
     

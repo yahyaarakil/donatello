@@ -68,6 +68,7 @@ class Scheduler:
             scheduler._scheduled_tasks.insert(i, (self.job, self.args, t, recur))
             scheduler._lock.release()
             scheduler._event.set()
+            # return scheduler._scheduled_tasks[i]
 
         def once(self, t: Union[str, int, float]):
             if isinstance(t, str):
@@ -75,7 +76,7 @@ class Scheduler:
             now = datetime.timestamp(datetime.now())
             if t < now:
                 logger.error('Cannot schedule task to the past')
-                return
+                return None
             self._insert_task(t)
 
         def after(self, t: int):

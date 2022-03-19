@@ -1,3 +1,4 @@
+from datetime import datetime
 from communications import Router, Request, Method, Message
 from donatello_framework import Donatello
 from missions import Mission, MissionManager
@@ -14,7 +15,7 @@ class DDonatello(Donatello):
         super().__init__()
         self._state = State.ASLEEP
         self.e = threading.Event()
-        self.msn = MissionManager()
+        self.msn = MissionManager(self)
 
         self._update_dict = {
             State.ASLEEP: self._sleep_update,
@@ -48,8 +49,8 @@ class DDonatello(Donatello):
 
     def _sleep_update(self):
         self.logger.info('Sleeping...')
-        # self.e.clear()
-        # self.e.wait()
+        self.e.clear()
+        self.e.wait()
 
     def update(self):
         start_time = time.time()
@@ -75,15 +76,23 @@ if __name__ == "__main__":
         # start
         donatello = DDonatello()
 
-        donatello.msn.run_mission(
-            Mission(
-                pattern=[
-                    (35.364147, 33.118160),
-                    (35.364391, 33.119475),
-                    (35.363998, 33.120464)
-                ]
-            )
-        )
+        # donatello.msn.run_mission(
+        #     Mission(
+        #         pattern=[
+        #             (35.364147, 33.118160),
+        #             (35.364391, 33.119475),
+        #             (35.363998, 33.120464)
+        #         ]
+        #     )
+        # )
+        donatello.com.makeRequest(Request(Method.POST, 'mission.schedule', {
+            'pattern': [
+                (35.364147, 33.118160),
+                (35.364391, 33.119475),
+                (35.363998, 33.120464)
+            ],
+            'time': datetime.timestamp(datetime.now()) + 15
+        }))
 
         # update
         while True:
