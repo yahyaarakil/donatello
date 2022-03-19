@@ -1,7 +1,6 @@
 from communications import Router, Request, Method, Message
 from donatello_framework import Donatello
 from missions import Mission, MissionManager
-from mavlink_module import Ardu
 import logging, time
 
 
@@ -20,13 +19,22 @@ class DDonatello(Donatello):
         self.scheduleMissionRouter.get('current', self.msn.get_current_mission)
         self.scheduleMissionRouter.get('', self.msn.get_mission_by_id)
         self.com.use('mission', self.scheduleMissionRouter)
-        # self.ardu = Ardu()
+
+        self.com.post('awake', self.fsm.awake)
 
 if __name__ == "__main__":
     logging.basicConfig(level="DEBUG")
 
-    # ardu.go_to_global((35.363766620836216, 33.11955332648672, 0))
-    # ardu.set_fence(((35.36316936246472, 33.11961807818279, 50), ))
     donatello = DDonatello()
+    donatello.msn.run_mission(
+        Mission(
+            pattern=[
+                (35.364147, 33.118160),
+                (35.364391, 33.119475),
+                (35.363998, 33.120464)
+            ]
+        ),
+        donatello.fsm.meta_state
+    )
     # donatello.com.makeRequest(Request(Method.POST, 'mission.now', {'mission': 'none'}))
     # # donatello.com.makeRequest(Request(Method.GET, 'mission.current', {'mission': 'none'}))

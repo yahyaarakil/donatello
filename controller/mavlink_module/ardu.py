@@ -8,17 +8,29 @@ logger = logging.getLogger('MAVLINK')
 
 class Ardu:
     def __init__(self):
+        self.connected = False
+        self.connect()
+
+        while not self.connected:
+            self.connection.close()
+            logging.critical('Cannot establish communication with ArduPilot')
+            logging.info('Retrying in 5 seconds')
+            time.sleep(5)
+            self.connect()
+
+    def connect(self):
         self.connection = mavutil.mavlink_connection(ARDUPILOT_ADDRESS)
         if self.connection.wait_heartbeat(timeout=5):
-            logging.info('Connected to ArduPilot')
-            logging.info('Setting parameters')
-            self.set_parameters()
-            self.set_home(HOME_COORDINATES)
-            self.disarm()
-            self.change_mode('GUIDED')
-        else:
-            logging.critical('Cannot establish communication with ArduPilot')
-            raise Exception()
+            self.connected_p()
+
+    def connected_p(self):
+        self.connected = True
+        logging.info('Connected to ArduPilot')
+        logging.info('Setting parameters')
+        self.set_parameters()
+        self.set_home(HOME_COORDINATE)
+        self.disarm()
+        self.change_mode('GUIDED')
 
     def _long_req(self, args, res_type='COMMAND_ACK'):
         try:

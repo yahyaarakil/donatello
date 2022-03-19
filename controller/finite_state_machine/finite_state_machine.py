@@ -1,5 +1,4 @@
 from .state_enums import State
-from .state_enums import OperationalState
 
 import threading, logging
 
