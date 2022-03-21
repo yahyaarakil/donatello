@@ -1,5 +1,5 @@
-from scheduling.scheduler import Scheduler
 from .mission import Mission
+from states import *
 
 class MissionManager:
     def __init__(self, donatello) -> None:
@@ -23,8 +23,17 @@ class MissionManager:
         self.donatello.sch.schedule(self.run_mission, (Mission(req.body['pattern']),)).once(req.body['time'])
         res.status(200).text('Mission Scheduled')
 
+    def start_scheduled_mission(self):
+        pass
+
     def run_mission(self, mission: Mission):
         print('Starting mission')
         self.current_mission = mission
+        self.donatello.state = State.IN_MISSION
         self.donatello.e.set()
+        try:
+            self.donatello.ardu.arm()
+        except:
+            self.donatello.logger.error('Mission cannot continue due to failure to arm')
+            self.donatello.ardu.return_to_launch()
     

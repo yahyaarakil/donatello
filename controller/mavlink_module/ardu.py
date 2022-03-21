@@ -155,8 +155,9 @@ class Ardu:
         try:
             self._arm(1)
             logger.info('Armed')
-        except:
+        except Exception as e:
             logger.error('Failed to arm')
+            raise e
 
     def disarm(self):
         try:
