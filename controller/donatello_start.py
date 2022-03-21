@@ -3,22 +3,36 @@ from communications import Router, Request, Method, Message
 from donatello_framework import Donatello
 from missions import Mission, MissionManager
 import logging, time, threading
-from enum import Enum
+from states import *
 from config import GEN
-
-class State(Enum):
-    ASLEEP = 'ASLEEP'
-
+import pickle, copy
 
 class DDonatello(Donatello):
+    def load_settings(self):
+        try:
+            self.logger.info('Loading settings')
+            with open('settings.bin', 'r') as f:
+                self.settings = pickle.load(f)
+        except FileNotFoundError:
+            self.logger.info('No settings file found, loading defaults')
+            from settings import settings as SETTINGS
+            self.settings = copy.deepcopy(SETTINGS)
+
     def __init__(self) -> None:
         super().__init__()
+        self.load_settings()
         self._state = State.ASLEEP
+        self._mission_state = MissionState.IDLE
         self.e = threading.Event()
         self.msn = MissionManager(self)
 
         self._update_dict = {
             State.ASLEEP: self._sleep_update,
+            State.IN_MISSION: self._mission_update,
+        }
+        self._mission_update_dict = {
+            MissionState.IDLE: self._idle_update,
+            MissionState.MOVING: self._moving_update,
         }
         self._target_frame_time = 1/GEN['TARGET_REFRESH_RATE']
         self._refresh_counter = 0
@@ -47,10 +61,28 @@ class DDonatello(Donatello):
         self.logger.info(f'State: {self._state}')
         self._state = value
 
+    @property
+    def mission_state(self):
+        return self._mission_state
+
+    @mission_state.setter
+    def mission_state(self, value: State):
+        self.logger.info(f'Mission State: {self._mission_state}')
+        self._mission_state = value
+
     def _sleep_update(self):
         self.logger.info('Sleeping...')
         self.e.clear()
         self.e.wait()
+
+    def _mission_update(self):
+        self._mission_update_dict[self.mission_state]()
+
+    def _idle_update(self):
+        pass
+
+    def _moving_update(self):
+        pass
 
     def update(self):
         start_time = time.time()
