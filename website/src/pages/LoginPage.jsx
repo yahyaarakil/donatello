@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-
+import NavBar from './NavBar';
+import Footer from "./Footer"
 import { useRef, useState, useEffect } from 'react';
 import "../styles/LoginPage.css"
 
@@ -55,9 +56,13 @@ export const LoginPage = () => {
         }
     }
 
-    return (
+    
 
+    return (
+      
         <>
+            <NavBar />
+            <Footer />
             <div className='login-page-body'>
                 {/* if logged in */}
                 {success ? (

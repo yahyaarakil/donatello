@@ -1,6 +1,7 @@
 import React from "react";
 import InformativeCard from "./InformativeCard";
 import NavBar from "./NavBar";
+import Footer from "./Footer"
 import "../styles/InformationPage.css"
 import donatelloLogo from "../images/donatello-logo.png"
 
@@ -23,16 +24,19 @@ function Body() {
                     <li>
                         <InformativeCard
                             header="why is donatello?"
+                            text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum tempora delectus ad sapiente perferendis voluptatum voluptates, porro, enim officiis, neque praesentium deserunt repellat soluta itaque cumque! Excepturi blanditiis dolor quo."
                             img={donatelloLogo} />
                     </li>
                     <li>
                         <InformativeCard
                             header="why is donatello?"
+                            text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum tempora delectus ad sapiente perferendis voluptatum voluptates, porro, enim officiis, neque praesentium deserunt repellat soluta itaque cumque! Excepturi blanditiis dolor quo."
                             img={donatelloLogo} />
                     </li>
                     <li>
                         <InformativeCard
                             header="why is donatello?"
+                            text="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum tempora delectus ad sapiente perferendis voluptatum voluptates, porro, enim officiis, neque praesentium deserunt repellat soluta itaque cumque! Excepturi blanditiis dolor quo."
                             img={donatelloLogo} />
                     </li>
                 </ul>
@@ -42,21 +46,3 @@ function Body() {
     );
 }
 
-function Footer() {
-    return (
-        <>
-            <div>
-                <footer className="footer">
-                    <nav className="footer-nav-bar">
-                        <ul>
-                            <li><a href="contact">Contact</a></li>
-                            <li><a href="howto">How to Apply</a></li>
-                            <li><a href="faqs">FAQs</a></li>
-                            <li><a href="developers">Developers</a></li>
-                        </ul>
-                    </nav>
-                </footer>
-            </div>
-        </>
-    );
-}
