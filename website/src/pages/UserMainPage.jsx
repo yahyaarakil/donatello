@@ -1,9 +1,10 @@
-import React from "react";
+import React from 'react';
 import "../styles/UserMainPage.css";
 import donatelloLogo from "../images/donatello-logo.png";
-import { MapContainer, TileLayer, FeatureGroup, Popup, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, Popup, Marker, Circle} from 'react-leaflet';
 import L from "leaflet";
 import donatReisler from "../data/DonatReisler.json"; 
+import { EditControl } from "react-leaflet-draw"
 
 
 export const UserMainPage = () => {
@@ -95,25 +96,36 @@ function DonatReisICerik(props) {
 function Map() {
     
     return (
-        <MapContainer center={[35.247051, 33.024617]} zoom={12}>
-            <FeatureGroup>
-            </FeatureGroup>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
-        />
-        
-        {donatReisler.map((reis, idx) => <Marker
-          position={[reis.lat, reis.lng]}
-          icon={marker}
-          key={idx}
-        >
-          <Popup>
-            <DonatReisICerik props={reis}/>
-            
-          </Popup>
-        </Marker>)}
-      </MapContainer>
+      <MapContainer center={[35.247051, 33.024617]} zoom={12}>
+
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
+      />
+      
+      <FeatureGroup>
+      ref={(reactFGref) => {
+          this._onFeatureGroupReady(reactFGref);
+        }}
+            <EditControl
+              position='topright'
+              draw={{
+              rectangle: false
+            }}
+            />
+            <Circle center={[51.51, -0.06]} radius={200} />
+          </FeatureGroup>
+      {donatReisler.map((reis, idx) => <Marker
+        position={[reis.lat, reis.lng]}
+        icon={marker}
+        key={idx}
+      >
+        <Popup>
+          <DonatReisICerik props={reis}/>
+          
+        </Popup>
+      </Marker>)}
+    </MapContainer>
       );
   }
 

@@ -16,8 +16,21 @@ export default function ContactPage() {
 
 function Body() {
     return(
-       <>
-       </>
+        <>
+        <div className="body-div">
+
+            <ul className="info-list">
+                <li>
+                    <InformativeCard
+                        header="About us"        
+                        text="Donatello Kamplubaga is a..."                   
+                        img={donatelloLogo} />
+                </li>
+                    
+                </ul>
+
+            </div>
+    </>
     );
     
 }
