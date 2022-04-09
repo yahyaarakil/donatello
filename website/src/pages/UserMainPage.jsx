@@ -6,6 +6,7 @@ import L from "leaflet";
 import donatReisler from "../data/DonatReisler.json"; 
 import { EditControl } from "react-leaflet-draw"
 
+import LoginNavBar from './LoginNavBar';
 
 export const UserMainPage = () => {
 
@@ -13,7 +14,7 @@ export const UserMainPage = () => {
 
     return (
         <>
-            <NavigationBar />
+            <LoginNavBar />
             <div class="wrapper">
                 <div class="main">
                     <Map/>
@@ -23,23 +24,6 @@ export const UserMainPage = () => {
                 </div>
             </div>
         </>
-    );
-}
-
-
-function NavigationBar() {
-    return (
-        <div>
-            <nav className="nav-bar">
-                <ul>
-                    <img src={donatelloLogo} className="nav-logo" alt="donatello-logo" />
-                    <li><a href="settings">Settings</a></li>
-                    <li><a href="profile"><i class="gg-profile"></i></a></li>
-                    <li><a href="notifications"><i class="gg-bell"></i></a></li>
-                    <li><a href="logout"><i class="gg-log-out"></i></a></li>
-                </ul>
-            </nav>
-        </div>
     );
 }
 

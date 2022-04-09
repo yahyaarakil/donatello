@@ -71,7 +71,7 @@ export const LoginPage = () => {
                         <br />
                         <p>
                             {/* react route here */}
-                            <a href='userpage'>go to user page</a>
+                            <a href='MainPage'>go to user page</a>
                         </p>
                     </div>
                 ) //else

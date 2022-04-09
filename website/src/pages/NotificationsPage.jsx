@@ -5,7 +5,7 @@ import LoginNavBar from './LoginNavBar';
 import { useRef, useState, useEffect } from 'react';
 import "../styles/ProfilePage.css"
 
-export const ProfilePage = () => {
+export const NotificationsPage = () => {
     
 
 
@@ -20,4 +20,4 @@ export const ProfilePage = () => {
     )
 }
 
-export default ProfilePage
+export default NotificationsPage

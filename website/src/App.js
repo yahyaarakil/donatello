@@ -6,6 +6,8 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage'
+import SettingsPage from './pages/SettingsPage';
+import NotificationsPage from './pages/NotificationsPage'
 
 import {
   BrowserRouter as Router,
@@ -26,6 +28,8 @@ function App() {
         <Route path = "/login" element = {<LoginPage/>}/>
         <Route path = "/contact" element = {<ContactPage/>}/>
         <Route path = "/about" element = {<AboutPage/>}/>
+        <Route path = "/settings" element  = {<SettingsPage/>}/>
+        <Route path = "/notifications" element = {<NotificationsPage/>}/>
       </Routes>
       
     </Router>
