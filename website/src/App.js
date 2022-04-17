@@ -8,7 +8,7 @@ import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage'
 import SettingsPage from './pages/SettingsPage';
 import NotificationsPage from './pages/NotificationsPage'
-
+import CreateMissionPage from './pages/CreateMission'
 import {
   BrowserRouter as Router,
   Route,
@@ -30,6 +30,7 @@ function App() {
         <Route path = "/about" element = {<AboutPage/>}/>
         <Route path = "/settings" element  = {<SettingsPage/>}/>
         <Route path = "/notifications" element = {<NotificationsPage/>}/>
+        <Route path = "/createmission" element = {<CreateMissionPage/>}/>
       </Routes>
       
     </Router>

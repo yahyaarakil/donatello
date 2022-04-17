@@ -33,7 +33,9 @@ function Body() {
         <div className="body-div">
             <ul className="mission-list">
                 <li>
-                    <Container name="Create Mission" />
+                    <a href="CreateMission"> <Container name="Create Mission" /></a>
+                    
+                    
                 </li>
                 <li>
                     <Container name="Edit Mission" />
