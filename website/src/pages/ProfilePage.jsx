@@ -62,6 +62,7 @@ function RightBody() {
                         </li>
 
                     </ul></div>
+                    
             </div>
         </>
     )
@@ -81,12 +82,11 @@ function LeftBody() {
 }
 
 function ProfilePic() {
-
-
-    var loadFile = function (event) {
+    
+    function handleOnClick(event){
         var image = document.getElementById("output");
         image.src = URL.createObjectURL(event.target.files[0]);
-    };
+      };
 
     return (
         <>
@@ -98,7 +98,7 @@ function ProfilePic() {
                 <label class="-label" for="file">
                     <span>Change Image</span>
                 </label>
-                <input id="file" type="file" onchange="loadFile(event)" />
+                <input id="file" type="file" onClick={handleOnClick} />
 
             </div>
         </>
