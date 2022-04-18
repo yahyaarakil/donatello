@@ -38,13 +38,14 @@ function RightBody() {
                         <li class="contentnode">
                             <dl>
                                 <dt>Name</dt>
-                                <dd>Master</dd>
-
+                                <p>Oguz Kagan</p>
+                                <input id="text"/>
                                 <dt>Surname</dt>
-                                <dd>Splinter</dd>
-
+                                <p>Altas</p>
+                                <input id="text"/>
                                 <dt>Email address</dt>
                                 <dd><a href="mailto:oguz.altas@metu.edu.tr">oguz.altas@metu.edu.tr</a></dd>
+                                <input id="text"/>
 
 
                             </dl>
@@ -73,14 +74,36 @@ function LeftBody() {
     return (
         <>
             <div>
-                <p>
-                    hello
-                </p>
+                <ProfilePic />
             </div>
         </>
     )
 }
 
+function ProfilePic() {
+
+
+    var loadFile = function (event) {
+        var image = document.getElementById("output");
+        image.src = URL.createObjectURL(event.target.files[0]);
+    };
+
+    return (
+        <>
+
+            <div class="profile-pic">
+                <img src="https://i.pinimg.com/originals/22/94/0c/22940c5d7d3e464f4bff0112c401888a.jpg" id="output" width="200" />
+                <br>
+                </br>
+                <label class="-label" for="file">
+                    <span>Change Image</span>
+                </label>
+                <input id="file" type="file" onchange="loadFile(event)" />
+
+            </div>
+        </>
+    )
+}
 
 
 export default ProfilePage
