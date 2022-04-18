@@ -98,7 +98,7 @@ function ProfilePic() {
                 <label class="-label" for="file">
                     <span>Change Image</span>
                 </label>
-                <input id="file" type="file" onClick={handleOnClick} />
+                <input id="file" type="file" onChange={handleOnClick} />
 
             </div>
         </>
