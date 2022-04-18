@@ -33,15 +33,14 @@ function Body() {
         <div className="body-div">
             <ul className="mission-list">
                 <li>
-                    <a href="CreateMission"> <Container name="Create Mission" /></a>
-                    
+                    <a href="CreateMission" style ={{textDecoration: 'none',color: 'inherit'}}><Container name="Create Mission" /></a>
                     
                 </li>
                 <li>
-                    <Container name="Edit Mission" />
+                  <a href="EditMission" style ={{textDecoration: 'none',color: 'inherit'}}><Container name="Edit Mission" /></a>
                 </li>
                 <li>
-                    <Container name="Review Mission" />
+                  <a href="ReviewMission" style ={{textDecoration: 'none',color: 'inherit'}}><Container name="Review Mission" /></a>
                 </li>
             </ul>
         </div>
@@ -93,12 +92,7 @@ function Map() {
       ref={(reactFGref) => {
           this._onFeatureGroupReady(reactFGref);
         }}
-            <EditControl
-              position='topright'
-              draw={{
-              rectangle: false
-            }}
-            />
+            
             <Circle center={[51.51, -0.06]} radius={200} />
           </FeatureGroup>
       {donatReisler.map((reis, idx) => <Marker

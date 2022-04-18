@@ -9,6 +9,8 @@ import AboutPage from './pages/AboutPage'
 import SettingsPage from './pages/SettingsPage';
 import NotificationsPage from './pages/NotificationsPage'
 import CreateMissionPage from './pages/CreateMission'
+import EditMissionPage from './pages/EditMission'
+import ReviewMissionPage from './pages/ReviewMission'
 import {
   BrowserRouter as Router,
   Route,
@@ -31,6 +33,8 @@ function App() {
         <Route path = "/settings" element  = {<SettingsPage/>}/>
         <Route path = "/notifications" element = {<NotificationsPage/>}/>
         <Route path = "/createmission" element = {<CreateMissionPage/>}/>
+        <Route path = "/editmission" element = {<EditMissionPage/>}/>
+        <Route path = "/reviewmission" element = {<ReviewMissionPage/>}/>
       </Routes>
       
     </Router>
