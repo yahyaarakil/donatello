@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import LoginNavBar from './LoginNavBar';
-import Footer from './Footer';
+import { Container,Row,Col,Form ,Button} from 'react-bootstrap';
 
 import { useRef, useState, useEffect } from 'react';
 import "../styles/ProfilePage.css"
-
 export const ProfilePage = () => {
 
     return (
@@ -13,14 +12,14 @@ export const ProfilePage = () => {
         <>
             <LoginNavBar />
             <div class="wrapper">
-                <div class="main">
+                <div class="profilemain">
                     <LeftBody />
+                    
                 </div>
-                <div class="sidebar">
+                <div class="profilesidebar">
                     <RightBody />
                 </div>
             </div>
-            <Footer />
         </>
     )
 }
@@ -29,41 +28,43 @@ function RightBody() {
 
     return (
         <>
-            <div className="user-details">
-                <div class="card-body" id="yui_3_17_2_1_1650266273621_24">
-                    <h3 class="lead">User details</h3>
-                    <ul id="yui_3_17_2_1_1650266273621_23">
-                        <li class="editprofile"><span><a href="http://localhost:3000/profile">Save Changes</a></span></li>
 
-                        <li class="contentnode">
-                            <dl>
-                                <dt>Name</dt>
-                                <p>Oguz Kagan</p>
-                                <input id="text"/>
-                                <dt>Surname</dt>
-                                <p>Altas</p>
-                                <input id="text"/>
-                                <dt>Email address</dt>
-                                <dd><a href="mailto:oguz.altas@metu.edu.tr">oguz.altas@metu.edu.tr</a></dd>
-                                <input id="text"/>
+            <div className='rightbody' style={{marginTop: 0}}>
+                <div>
+                    <div style={{marginTop: 0}}>
+                        <h1 style={{marginTop: 0}}>User Profile</h1>
+                    </div>
+                    <Form className="profileform" style={{display: 'flex',  justifyContent:'right', alignItems:'center'}}>     
+                    <div className='profileformDiv'>
+                        <Form.Group controlId="formCategory1">
+                                <Form.Label style={{display: 'flex',  justifyContent:'left'}}>Name</Form.Label>
+                                <div className='profileFormDivLittle'>
+                                    <Form.Control type="text" defaultValue="Mustafa" style={{width: 275}}/>
+                                </div>
+                                
+                        </Form.Group>
+                        <Form.Group controlId="formCategory1">
+                                <Form.Label>Surname</Form.Label>
+                                <div className='profileFormDivLittle'>
+                                    <Form.Control type="text" defaultValue="Aygün" style={{width: 275}}/>
+                                </div>
+                                
+                        </Form.Group>
+                        <Form.Group controlId="formCategory1">
+                                <Form.Label>Email</Form.Label>
+                                <div className='profileFormDivLittle'>
+                                    <Form.Control type="text" defaultValue="aygun.mustafa@metu.edu.tr" style={{width: 275}}/>
+                                </div>
+                                
+                        </Form.Group>
+                    </div>
+                        
+                    </Form>
+                </div>
 
-
-                            </dl>
-                        </li>
-
-                        <li className='vessels-operating'>
-                            <label for="cars">Choose a vessel to remove:</label>
-                            <select name="cars" id="cars">
-                                <option value="Girne Donatello">Girne Donatello</option>
-                                <option value="Karpaz Donatello">Karpaz Donatello</option>
-                                <option value="Lefke Donatello">Lefke Donatello</option>
-                                <option value="Magusa Donatello">Magusa Donatello</option>
-                            </select>
-                        </li>
-
-                    </ul></div>
-                    
             </div>
+
+    
         </>
     )
 
@@ -72,17 +73,6 @@ function RightBody() {
 
 function LeftBody() {
 
-    return (
-        <>
-            <div>
-                <ProfilePic />
-            </div>
-        </>
-    )
-}
-
-function ProfilePic() {
-    
     function handleOnClick(event){
         var image = document.getElementById("output");
         image.src = URL.createObjectURL(event.target.files[0]);
@@ -90,17 +80,24 @@ function ProfilePic() {
 
     return (
         <>
+            <div className='leftbody'>
+            <div>
+                <div className='image' style={{display: 'flex',  justifyContent:'left'}}>
+                    <img src="https://i.pinimg.com/originals/22/94/0c/22940c5d7d3e464f4bff0112c401888a.jpg" alt= "profil pic" id="output" width="400" />
+                </div>
 
-            <div class="profile-pic">
-                <img src="https://i.pinimg.com/originals/22/94/0c/22940c5d7d3e464f4bff0112c401888a.jpg" id="output" width="200" />
-                <br>
-                </br>
-                <label class="-label" for="file">
-                    <span>Change Image</span>
-                </label>
-                <input id="file" type="file" onChange={handleOnClick} />
+                <div style={{display: 'flex',  justifyContent:'left'}}>
+                    <label class="-label" for="file">
+                        <span>Change Image</span>
+                    </label>
+                    
+                </div>
+                <div style={{display: 'flex',  justifyContent:'left'}}>
+                    <input id="file" type="file" onChange={handleOnClick} />
+                </div>
 
             </div>
+        </div>
         </>
     )
 }
