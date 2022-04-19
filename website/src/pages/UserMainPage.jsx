@@ -1,10 +1,12 @@
-import React from "react";
+import React from 'react';
 import "../styles/UserMainPage.css";
 import donatelloLogo from "../images/donatello-logo.png";
-import { MapContainer, TileLayer, FeatureGroup, Popup, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, Popup, Marker, Circle} from 'react-leaflet';
 import L from "leaflet";
 import donatReisler from "../data/DonatReisler.json"; 
+import { EditControl } from "react-leaflet-draw"
 
+import LoginNavBar from './LoginNavBar';
 
 export const UserMainPage = () => {
 
@@ -12,7 +14,7 @@ export const UserMainPage = () => {
 
     return (
         <>
-            <NavigationBar />
+            <LoginNavBar />
             <div class="wrapper">
                 <div class="main">
                     <Map/>
@@ -26,35 +28,19 @@ export const UserMainPage = () => {
 }
 
 
-function NavigationBar() {
-    return (
-        <div>
-            <nav className="nav-bar">
-                <ul>
-                    <img src={donatelloLogo} className="nav-logo" alt="donatello-logo" />
-                    <li><a href="settings">Settings</a></li>
-                    <li><a href="profile"><i class="gg-profile"></i></a></li>
-                    <li><a href="notifications"><i class="gg-bell"></i></a></li>
-                    <li><a href="logout"><i class="gg-log-out"></i></a></li>
-                </ul>
-            </nav>
-        </div>
-    );
-}
-
-
 function Body() {
     return (
         <div className="body-div">
             <ul className="mission-list">
                 <li>
-                    <Container name="Create Mission" />
+                    <a href="CreateMission" style ={{textDecoration: 'none',color: 'inherit'}}><Container name="Create Mission" /></a>
+                    
                 </li>
                 <li>
-                    <Container name="Edit Mission" />
+                  <a href="EditMission" style ={{textDecoration: 'none',color: 'inherit'}}><Container name="Edit Mission" /></a>
                 </li>
                 <li>
-                    <Container name="Review Mission" />
+                  <a href="ReviewMission" style ={{textDecoration: 'none',color: 'inherit'}}><Container name="Review Mission" /></a>
                 </li>
             </ul>
         </div>
@@ -95,25 +81,31 @@ function DonatReisICerik(props) {
 function Map() {
     
     return (
-        <MapContainer center={[35.247051, 33.024617]} zoom={12}>
-            <FeatureGroup>
-            </FeatureGroup>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
-        />
-        
-        {donatReisler.map((reis, idx) => <Marker
-          position={[reis.lat, reis.lng]}
-          icon={marker}
-          key={idx}
-        >
-          <Popup>
-            <DonatReisICerik props={reis}/>
+      <MapContainer center={[35.247051, 33.024617]} zoom={12}>
+
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
+      />
+      
+      <FeatureGroup>
+      ref={(reactFGref) => {
+          this._onFeatureGroupReady(reactFGref);
+        }}
             
-          </Popup>
-        </Marker>)}
-      </MapContainer>
+            <Circle center={[51.51, -0.06]} radius={200} />
+          </FeatureGroup>
+      {donatReisler.map((reis, idx) => <Marker
+        position={[reis.lat, reis.lng]}
+        icon={marker}
+        key={idx}
+      >
+        <Popup>
+          <DonatReisICerik props={reis}/>
+          
+        </Popup>
+      </Marker>)}
+    </MapContainer>
       );
   }
 

@@ -9,6 +9,7 @@ export default function NavBar() {
                 <li><a href="contact">Contact</a></li>
                 <li><a href="about">About</a></li>
                 <li><a href="login">Login</a></li>    
+                <li><a href="home">Home</a></li>
             </ul>
         </nav>
 
