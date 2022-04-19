@@ -44,7 +44,9 @@ form.profileform {
     justify-content: space-evenly;
     padding-bottom: 1rem;
     padding-top: 1rem;
-    width: 300px
+    width: 300px;
+    border-radius: 12px;
+
 }
 
 div.profileformDiv{
@@ -61,4 +63,8 @@ div.profileformDivLittle{
     align-content: left;
     margin: 0%;
     width: 100%;
+}
+
+.profile-pic{
+    border-radius: 50%;
 }

@@ -83,7 +83,7 @@ function LeftBody() {
             <div className='leftbody'>
             <div>
                 <div className='image' style={{display: 'flex',  justifyContent:'left'}}>
-                    <img src="https://i.pinimg.com/originals/22/94/0c/22940c5d7d3e464f4bff0112c401888a.jpg" alt= "profil pic" id="output" width="400" />
+                    <img className="profile-pic" src="https://i.pinimg.com/originals/22/94/0c/22940c5d7d3e464f4bff0112c401888a.jpg" alt= "profil pic" id="output" width="400" />
                 </div>
 
                 <div style={{display: 'flex',  justifyContent:'left'}}>
