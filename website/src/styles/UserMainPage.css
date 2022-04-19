@@ -12,6 +12,10 @@
     width: 60%;
     height:38rem;
 }
+.body-div .mission-list otherpage{
+    text-decoration: none;
+    color: inherit;
+}
 
 .sidebar {
     width: 25%;
@@ -67,3 +71,5 @@
   .sr-only {
     display: none;
   }
+
+  

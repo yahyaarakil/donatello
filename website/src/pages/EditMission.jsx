@@ -82,6 +82,14 @@ function Body({ myVar }) {
             <ul className="mission">
                 <div>
                     <div>
+                        <select class="selectpicker" data-style="btn-info" name="selectpicker">
+                            <optgroup label="Select Device">
+                                <option name="table1" value="1">Device 1</option>
+                                <option name="table2" value="2">Device 2</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div>
                         <p>top: {myVar.top}</p>
                         <p>bottom: {myVar.bottom}</p>
                         <p>left: {myVar.left}</p>
@@ -96,14 +104,7 @@ function Body({ myVar }) {
                             placeholder="Mission Name"
                         />
                     </div>
-                    <div>
-                        <select class="selectpicker" data-style="btn-info" name="selectpicker">
-                            <optgroup label="Select Device">
-                                <option name="table1" value="1">Device 1</option>
-                                <option name="table2" value="2">Device 2</option>
-                            </optgroup>
-                        </select>
-                    </div>
+                    
                     <div>
                         <button>Clean Area</button>
                     </div>
