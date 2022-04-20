@@ -4,6 +4,8 @@ import LoginNavBar from './LoginNavBar';
 import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
 import { useRef, useState, useEffect } from 'react';
 import { EditControl } from "react-leaflet-draw"
+import {Navigate} from "react-router-dom";
+
 
 import "leaflet-draw/dist/leaflet.draw.css"
 
@@ -77,6 +79,18 @@ function Map({ setMyVar }) {
 }
 
 function Body({ myVar }) {
+
+    const handleSubmit = async (e) => {
+        if(myVar.top != 0){
+            console.log("Let's go");
+            <Navigate to="/MainPage"/>
+        }
+        else{
+            console.log("Sad")
+        }
+
+    }
+
     return (
         <div className="body-div">
             <ul className="mission">
@@ -105,7 +119,9 @@ function Body({ myVar }) {
                         </select>
                     </div>
                     <div>
-                        <button>Clean Area</button>
+                        <form onSubmit={handleSubmit}>
+                            <button>Create Mission</button>
+                        </form>
                     </div>
 
                 </div>
