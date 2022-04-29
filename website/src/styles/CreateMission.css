@@ -3,21 +3,17 @@
     justify-content: space-between;
 }
 
-.main, .sidebar {
+.map, .sidebody {
     margin: 1rem;
     padding: 15px;
 }
 
-.main {
+.map {
     width: 60%;
     height:38rem;
 }
-.body-div .mission-list otherpage{
-    text-decoration: none;
-    color: inherit;
-}
 
-.sidebar {
+.sidebody {
     width: 25%;
     height: 25vh;
     position: -webkit-sticky;
@@ -71,5 +67,3 @@
   .sr-only {
     display: none;
   }
-
-  

@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import HomePage from './pages/HomePage';
-import LoginPage  from './pages/LoginPage';
-import UserMainPage from "./pages/UserMainPage";
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserMainPage />    
+    <App />  
   </React.StrictMode>,
   document.getElementById('root')
 );

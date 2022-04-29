@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-
+import NavBar from './NavBar';
+import Footer from "./Footer"
 import { useRef, useState, useEffect } from 'react';
+import {Navigate} from "react-router-dom";
 import "../styles/LoginPage.css"
 
 export const LoginPage = () => {
@@ -55,20 +57,18 @@ export const LoginPage = () => {
         }
     }
 
-    return (
+    
 
+    return (
+      
         <>
+            <NavBar />
+            <Footer />
             <div className='login-page-body'>
                 {/* if logged in */}
                 {success ? (
-                    <div>
-                        <h1>You are Logged in!</h1>
-                        <br />
-                        <p>
-                            {/* react route here */}
-                            <a href='userpage'>go to user page</a>
-                        </p>
-                    </div>
+                    <Navigate to="/MainPage"/>
+
                 ) //else
                     : (
                         <div className='login-div'>
