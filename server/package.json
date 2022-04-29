@@ -5,12 +5,15 @@
   "main": "app.js",
   "scripts": {
     "test": "mocha",
-    "server": "node app.js"
+    "server": "node app.js",
+    "nodemon": "nodemon app.js"
   },
   "author": "Yahya Arakil, Oguz Kagan Altas, Mustafa Aygun",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "mongoose": "^6.3.1",
+    "ws": "^8.5.0"
   },
   "devDependencies": {
     "mocha": "^9.1.3",

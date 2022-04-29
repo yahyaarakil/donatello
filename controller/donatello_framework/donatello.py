@@ -1,4 +1,3 @@
-from finite_state_machine import FiniteStateMachine
 from communications import Communication, Message, Method, Router, Request, Response, deserialize
 import time, logging
 from mavlink_module import Ardu
@@ -6,14 +5,11 @@ from scheduling import Scheduler
 
 class Donatello:
     def __init__(self) -> None:
-        logging.basicConfig(level='DEBUG')
-        self.fsm = FiniteStateMachine() # ASYNC
-        self.com = Communication() # ASYNC
+        self.com = Communication(self) # ASYNC
         self.sch = Scheduler() # ASYNC
-        
-        self.ardu = Ardu() # SYNC!
+        self.ardu = Ardu(self) # SYNC!
 
     def stop(self):
+        self.logger.info('Stopping Donatello')
         self.com.stop()
-        self.fsm.stop()
         self.sch.stop()

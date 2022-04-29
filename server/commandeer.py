@@ -12,7 +12,7 @@ async def echo(websocket):
 
             await websocket.send(message)
             message = await websocket.recv()
-            print(f"<<< {message}")
+            print(f">>> {message}")
     
     except websockets.exceptions.ConnectionClosed:
         print('User disconnected')

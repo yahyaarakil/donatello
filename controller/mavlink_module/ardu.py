@@ -1,34 +1,44 @@
 from pymavlink import mavutil
 import logging
-from .conf import *
+from config import ARDU
 from .parameters import param_dict
 import fnmatch, math, time, struct
+import numpy as np
 
 logger = logging.getLogger('MAVLINK')
 
 class Ardu:
-    def __init__(self):
+    def __init__(self, donatello):
+        self.donatello = donatello
+        self.establish_connection()
+
+    def establish_connection(self):
         self.connected = False
         self.connect()
 
         while not self.connected:
+            self.donatello.flags['CRITICAL'] += 1
+            self.donatello.flags['MAVLINK'] = False
             self.connection.close()
-            logging.critical('Cannot establish communication with ArduPilot')
-            logging.info('Retrying in 5 seconds')
+            logger.critical('Cannot establish communication with ArduPilot')
+            logger.info('Retrying in 5 seconds')
             time.sleep(5)
             self.connect()
 
     def connect(self):
-        self.connection = mavutil.mavlink_connection(ARDUPILOT_ADDRESS)
+        self.connection = mavutil.mavlink_connection(ARDU['ARDUPILOT_ADDRESS'])
         if self.connection.wait_heartbeat(timeout=5):
             self.connected_p()
 
     def connected_p(self):
         self.connected = True
-        logging.info('Connected to ArduPilot')
-        logging.info('Setting parameters')
+        self.donatello.flags['CRITICAL'] -= 1
+        self.donatello.flags['MAVLINK'] = True
+        logger.info('Connected to ArduPilot')
+        logger.info('Setting parameters')
         self.set_parameters()
-        self.set_home(HOME_COORDINATE)
+        self.set_home(ARDU['HOME_COORDINATE'])
+        self.home = ARDU['HOME_COORDINATE']
         self.disarm()
         self.change_mode('GUIDED')
 
@@ -41,7 +51,7 @@ class Ardu:
             )
             return self.connection.recv_match(type=res_type, blocking=True)
         except Exception as e:
-            logging.error('Ardupilot command failed')
+            logger.error('Ardupilot command failed')
             raise e
 
     def go_to_global(self, gps_coordinate):
@@ -65,7 +75,7 @@ class Ardu:
                 0,
             )
         )
-        logging.info(f'Going to {gps_coordinate}')
+        logger.info(f'Going to {gps_coordinate}')
 
     # def set_includion_fence(self, fence_points):
     #     if self._long_req((
@@ -79,7 +89,7 @@ class Ardu:
     #         0,
     #         0,
     #     )):
-    #         logging.info('Fence enabled')
+    #         logger.info('Fence enabled')
     #         for point in fence_points:
     #             pass
     #     else:
@@ -101,9 +111,9 @@ class Ardu:
         )
         # Wait for ACK command
         if self.connection.recv_match(type="COMMAND_ACK", blocking=True).result != 0:
-            logging.error(f'Failed to set mode to {mode}')
+            logger.error(f'Failed to set mode to {mode}')
         else:
-            logging.info(f'Mode set to {mode}')
+            logger.info(f'Mode set to {mode}')
 
     def return_to_launch(self):
         if self._long_req((
@@ -117,9 +127,9 @@ class Ardu:
             0,
             0,
         )).result != 0:
-            logging.error('Can NOT RTL')
+            logger.error('Can NOT RTL')
         else:
-            logging.info('RTL')
+            logger.info('RTL')
 
     def set_home(self, gps_coordinate):
         if self._long_req((
@@ -133,9 +143,9 @@ class Ardu:
             gps_coordinate[1], # longitude
             gps_coordinate[2], # altitiude
         )).result != 0:
-            logging.error('Can NOT set ArduPilot home')
+            logger.error('Can NOT set ArduPilot home')
         else:
-            logging.info('ArduPilot home set')
+            logger.info('ArduPilot home set')
 
     def _arm(self, arm_disarm):
         if self._long_req((
@@ -154,27 +164,31 @@ class Ardu:
     def arm(self):
         try:
             self._arm(1)
-            logging.info('Armed')
-        except:
-            logging.error('Failed to arm')
+            logger.info('Armed')
+        except Exception as e:
+            logger.error('Failed to arm')
+            raise e
 
     def disarm(self):
         try:
             self._arm(0)
-            logging.info('Disarmed')
+            logger.info('Disarmed')
         except:
-            logging.error('Failed to disarm')
+            logger.error('Failed to disarm')
 
     # lat long lat
     def get_position(self):
-        gps = self.connection.messages['GPS_RAW_INT']
-        return (gps.lat, gps.lon, gps.alt)
+        gps = self.connection.recv_match(type='GPS_RAW_INT', blocking=True)
+        gps = np.array((gps.lat, gps.lon, gps.alt))
+        return gps / 10000000
 
     def get_battery_percentage(self):
-        return self.connection.messages['SYS_STATUS'].battery_remaining
+        msg = self.connection.recv_match(type='SYS_STATUS', blocking=True)
+        return msg.battery_remaining
 
     def get_battery_voltage(self):
-        return self.connection.messages['SYS_STATUS'].voltage_battery
+        msg = self.connection.recv_match(type='SYS_STATUS', blocking=True)
+        return msg.voltage_battery
 
     def _mavset(self, name, value, parm_type=None, retries=3):
         got_ack = False
@@ -200,8 +214,8 @@ class Ardu:
 
     def set_parameters(self):
         for param_key, param_value in param_dict.items():
-            logging.info(f"Setting parameter {param_key} to {param_value['val']}")
+            logger.info(f"Setting parameter {param_key} to {param_value['val']}")
             if self._mavset(param_key, param_value['val'], param_value['type'], 1):
-                logging.info('Parameter set')
+                logger.info('Parameter set')
             else:
-                logging.error('Could not set parameter')
+                logger.error('Could not set parameter')

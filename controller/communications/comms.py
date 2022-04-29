@@ -1,7 +1,7 @@
 import logging, time
 import threading
 from types import FunctionType
-from .conf import *
+from config import COMS
 from .message import Message, Request, Response, deserialize
 from websocket import create_connection, _exceptions
 from .router import Router
@@ -9,7 +9,8 @@ from .router import Router
 logger = logging.getLogger('COMMUNICATION')
 
 class Communication(Router):
-    def __init__(self) -> None:
+    def __init__(self, donatello) -> None:
+        self.donatello = donatello
         super().__init__()
         self.stopped = False
         self._request_lock = threading.Lock()
@@ -23,14 +24,18 @@ class Communication(Router):
         logger.info('Establishing connection to server')
         self.listen_thread = None
         try:
-            self.ws = create_connection(f'ws://{SERVER_ADDRESS}:{SERVER_PORT}')
+            self.ws = create_connection(f"{COMS['WEB_PROTOCOL']}://{COMS['SERVER_ADDRESS']}:{COMS['SERVER_PORT']}")
             self.connected = True
             self.listen_thread = threading.Thread(target=self._listen)
             self.listen_thread.start()
             logger.info('Established connection to server')
+            self.donatello.flags['CRITICAL'] += 1
+            self.donatello.flags['SERVER'] = True
             self._process_request_queue()
         except ConnectionRefusedError:
             logger.error('Unable to establish connection to server')
+            self.donatello.flags['CRITICAL'] -= 1
+            self.donatello.flags['SERVER'] = False
             self.connected = False
         return self.connected
 
@@ -68,7 +73,7 @@ class Communication(Router):
         else:
             self._request_lock.acquire()
             self._request_queue.append((request, callback))
-            if len(self._request_queue) > MAX_REQ_QUEUE_SIZE:
+            if len(self._request_queue) > COMS['MAX_REQ_QUEUE_SIZE']:
                 self._request_queue.pop(0)
             self._request_lock.release()
 
