@@ -4,8 +4,9 @@ from donatello_framework import Donatello
 from missions import Mission, MissionManager
 import logging, time, threading
 from states import *
-from config import GEN
+from config import GEN, MOV
 import pickle, copy
+import numpy as np
 
 class DDonatello(Donatello):
     def load_settings(self):
@@ -19,8 +20,17 @@ class DDonatello(Donatello):
             self.settings = copy.deepcopy(SETTINGS)
 
     def __init__(self) -> None:
-        super().__init__()
+        self.logger = logging.getLogger('DONATELLO')
         self.load_settings()
+        self.flags = {
+            'CRITICAL': 0,
+            'SERVER': False,
+            'MAVLINK': False,
+            'STUCK': False,
+            'COLLIDED': False,
+            'SOLAR': False,
+        }
+        super().__init__()
         self._state = State.ASLEEP
         self._mission_state = MissionState.IDLE
         self.e = threading.Event()
@@ -29,6 +39,7 @@ class DDonatello(Donatello):
         self._update_dict = {
             State.ASLEEP: self._sleep_update,
             State.IN_MISSION: self._mission_update,
+            State.RTL: self._rtl_update,
         }
         self._mission_update_dict = {
             MissionState.IDLE: self._idle_update,
@@ -58,8 +69,8 @@ class DDonatello(Donatello):
 
     @state.setter
     def state(self, value: State):
-        self.logger.info(f'State: {self._state}')
         self._state = value
+        self.logger.info(f'State: {self._state}')
 
     @property
     def mission_state(self):
@@ -67,37 +78,70 @@ class DDonatello(Donatello):
 
     @mission_state.setter
     def mission_state(self, value: State):
-        self.logger.info(f'Mission State: {self._mission_state}')
         self._mission_state = value
+        self.logger.info(f'Mission State: {self._mission_state}')
+
+    @property
+    def target(self):
+        return self._target
+
+    @target.setter
+    def target(self, value: State):
+        self._target = np.array(value)
 
     def _sleep_update(self):
         self.logger.info('Sleeping...')
         self.e.clear()
         self.e.wait()
 
+    def _awake(self):
+        self.logger.info('Waking up')
+        self.state = State.IDLE
+        self.e.set()
+
     def _mission_update(self):
         self._mission_update_dict[self.mission_state]()
 
     def _idle_update(self):
-        pass
+        if len(self.msn.current_mission.path) > 0:
+            self.target = self.msn.current_mission.path.pop(0)
+            self.ardu.go_to_global(self.target)
+            self.mission_state = MissionState.MOVING
+        else:
+            self.logger.info('Finished pattern')
+            self.msn.end_current_mission()
+
+    def wait_to_reach_target(self):
+        pos = self.ardu.get_position()
+        distance = np.sum(np.square(pos[0:2] - self.target[0:2]))
+        # self.logger.debug('POS:  ', pos)
+        # self.logger.debug('TARGET:  ', self.target)
+        # self.logger.debug('DISTANCE:  ', distance)
+        return distance < MOV['STOPPING_DISTANCE']
 
     def _moving_update(self):
-        pass
+        # calc distance
+        if self.wait_to_reach_target():
+            self.mission_state = MissionState.IDLE
+
+    def _rtl_update(self):
+        # calc distance
+        if self.wait_to_reach_target():
+            self.state = State.ASLEEP
 
     def update(self):
         start_time = time.time()
-        self._update_dict[self.state]()
+        self._update_dict.get(self.state, self._idle_update)()
 
         frame_time = time.time() - start_time
         if frame_time < self._target_frame_time:
-            # print('SLEEPING FOR', )
             time.sleep(self._target_frame_time - frame_time)
-
         frame_time = time.time() - start_time
 
         self._refresh_counter += 1
         if self._refresh_counter > 240:
             self.logger.info(f'Refresh Rate: {1.0 / (frame_time)} Hz') # FPS = 1 / time to process loop
+            self.logger.info(f'Battery: {self.ardu.get_battery_percentage()}%') # FPS = 1 / time to process loop
             self._refresh_counter = 0
 
 
@@ -130,9 +174,9 @@ if __name__ == "__main__":
         while True:
             donatello.update()
 
-        donatello.com.makeRequest(Request(Method.POST, 'command.stop', {}))
+        # donatello.com.makeRequest(Request(Method.POST, 'command.stop', {}))
     except Exception as e:
-        donatello.logger.error(e.with_traceback())
+        pass
 
     # donatello.com.makeRequest(Request(Method.POST, 'mission.now', {'mission': 'none'}))
     # # donatello.com.makeRequest(Request(Method.GET, 'mission.current', {'mission': 'none'}))

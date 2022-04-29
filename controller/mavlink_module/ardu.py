@@ -3,15 +3,22 @@ import logging
 from config import ARDU
 from .parameters import param_dict
 import fnmatch, math, time, struct
+import numpy as np
 
 logger = logging.getLogger('MAVLINK')
 
 class Ardu:
-    def __init__(self):
+    def __init__(self, donatello):
+        self.donatello = donatello
+        self.establish_connection()
+
+    def establish_connection(self):
         self.connected = False
         self.connect()
 
         while not self.connected:
+            self.donatello.flags['CRITICAL'] += 1
+            self.donatello.flags['MAVLINK'] = False
             self.connection.close()
             logger.critical('Cannot establish communication with ArduPilot')
             logger.info('Retrying in 5 seconds')
@@ -25,10 +32,13 @@ class Ardu:
 
     def connected_p(self):
         self.connected = True
+        self.donatello.flags['CRITICAL'] -= 1
+        self.donatello.flags['MAVLINK'] = True
         logger.info('Connected to ArduPilot')
         logger.info('Setting parameters')
         self.set_parameters()
         self.set_home(ARDU['HOME_COORDINATE'])
+        self.home = ARDU['HOME_COORDINATE']
         self.disarm()
         self.change_mode('GUIDED')
 
@@ -168,14 +178,17 @@ class Ardu:
 
     # lat long lat
     def get_position(self):
-        gps = self.connection.messages['GPS_RAW_INT']
-        return (gps.lat, gps.lon, gps.alt)
+        gps = self.connection.recv_match(type='GPS_RAW_INT', blocking=True)
+        gps = np.array((gps.lat, gps.lon, gps.alt))
+        return gps / 10000000
 
     def get_battery_percentage(self):
-        return self.connection.messages['SYS_STATUS'].battery_remaining
+        msg = self.connection.recv_match(type='SYS_STATUS', blocking=True)
+        return msg.battery_remaining
 
     def get_battery_voltage(self):
-        return self.connection.messages['SYS_STATUS'].voltage_battery
+        msg = self.connection.recv_match(type='SYS_STATUS', blocking=True)
+        return msg.voltage_battery
 
     def _mavset(self, name, value, parm_type=None, retries=3):
         got_ack = False

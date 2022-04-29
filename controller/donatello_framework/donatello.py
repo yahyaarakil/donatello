@@ -5,10 +5,9 @@ from scheduling import Scheduler
 
 class Donatello:
     def __init__(self) -> None:
-        self.logger = logging.getLogger('DONATELLO')
-        self.com = Communication() # ASYNC
+        self.com = Communication(self) # ASYNC
         self.sch = Scheduler() # ASYNC
-        self.ardu = Ardu() # SYNC!
+        self.ardu = Ardu(self) # SYNC!
 
     def stop(self):
         self.logger.info('Stopping Donatello')
