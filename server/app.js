@@ -13,12 +13,13 @@ var wss = null;
 
 process.on('SIGINT', () => {
     console.log('Terminating Server');
-    console.log('Terminating Websocket connections');
     if (wss) {
+        console.log('Terminating Websocket connections');
         wss.clients.forEach(socket => {
             socket.close();
         });
     }
+    process.exit();
 });
 
 app.listen(process.env.HTTPS_PORT, () => {
@@ -29,8 +30,9 @@ app.listen(process.env.HTTPS_PORT, () => {
     }).then(() => {
         console.log('Starting Websocket Server');
         webSocketServer.serveDonatello(process.env.WSS_PORT).then((ws) => {
-            console.log('Websocket Server started successfully');
+            console.log(`Websocket Server started successfully on port ${process.env.WSS_PORT}`);
             wss = ws;
+            console.log(`Server started successfully on port ${process.env.HTTPS_PORT}`);
         }).catch((err) => {
             console.log(err);
         });
