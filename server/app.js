@@ -23,22 +23,22 @@ process.on('SIGINT', () => {
 });
 
 app.listen(process.env.HTTPS_PORT, () => {
-    console.log('Starting Donatello Server');
-    console.log('Establishing connection to Database');
+    console.log('🟡 Starting Donatello Server');
+    console.log('🟡 Establishing connection to Database');
     mongoose.connect(process.env.MONGODB_URL).then(() => {
-        console.log('Connected to Database successfully');
+        console.log('✅ Connected to Database successfully');
     }).then(() => {
-        console.log('Starting Websocket Server');
+        console.log('🟡 Starting Websocket Server');
         webSocketServer.serveDonatello(process.env.WSS_PORT).then((ws) => {
-            console.log(`Websocket Server started successfully on port ${process.env.WSS_PORT}`);
+            console.log(`✅ Websocket Server started successfully on port ${process.env.WSS_PORT}`);
             wss = ws;
-            console.log(`Server started successfully on port ${process.env.HTTPS_PORT}`);
+            console.log(`✅ Server started successfully on port ${process.env.HTTPS_PORT}`);
         }).catch((err) => {
             console.log(err);
         });
     }).catch((err) => {
         console.log(err);
-        console.log('Unable to connect to Database, EXITING');
+        console.log('❌ Unable to connect to Database, EXITING');
         process.exit();
     });
 });
