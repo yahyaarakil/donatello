@@ -1,8 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const authRouting = require('./routers/auth_routing');
+const donatelloCommandsRouting= require('./routers/donatello_commands_routing');
 
 const app = express();
+app.use(authRouting);
+app.use(donatelloCommandsRouting);
+
 app.listen(8000, () => {
     console.log('Starting Donatello Server');
     console.log('Establishing connection to Database');
