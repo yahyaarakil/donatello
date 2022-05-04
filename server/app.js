@@ -6,7 +6,8 @@ const donatelloCommandsRouting= require('./routers/donatello_commands_routing');
 const webSocketServer = require('./controllers/websocket_server');
 
 const app = express();
-app.use(authRouting);
+app.use(express.json());
+app.use('/auth', authRouting);
 app.use(donatelloCommandsRouting);
 
 var wss = null;
@@ -15,8 +16,8 @@ process.on('SIGINT', () => {
     console.log('Terminating Server');
     if (wss) {
         console.log('Terminating Websocket connections');
-        wss.clients.forEach(socket => {
-            socket.close();
+        wss.clients.forEach(ws => {
+            ws.close();
         });
     }
     process.exit();
