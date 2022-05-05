@@ -13,14 +13,18 @@ app.use(donatelloCommandsRouting);
 var wss = null;
 
 process.on('SIGINT', () => {
-    console.log('Terminating Server');
+    console.log('🟡 Terminating Server');
     if (wss) {
-        console.log('Terminating Websocket connections');
+        console.log('🟡 Terminating Websocket connections');
         wss.clients.forEach(ws => {
             ws.close();
         });
     }
-    process.exit();
+    console.log('🟡 Terminating connection to Database');
+    mongoose.disconnect().then(() => {
+        console.log('✅ Server exitting gracefully');
+        process.exit();
+    });
 });
 
 app.listen(process.env.HTTPS_PORT, () => {
@@ -35,10 +39,10 @@ app.listen(process.env.HTTPS_PORT, () => {
             wss = ws;
             console.log(`✅ Server started successfully on port ${process.env.HTTPS_PORT}`);
         }).catch((err) => {
-            console.log(err);
+            // console.log(err);
         });
     }).catch((err) => {
-        console.log(err);
+        // console.log(err);
         console.log('❌ Unable to connect to Database, EXITING');
         process.exit();
     });
