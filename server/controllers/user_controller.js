@@ -11,7 +11,7 @@ const createUser = (user) => {
                 // generate and save user
                 user = new userModel(user);
                 user.save().then((user) => {
-                    console.log('New user created and saved');
+                    console.log('👤 New user created and saved');
                     resolve(user);
                 }).catch((err) => reject(err) );
             });
