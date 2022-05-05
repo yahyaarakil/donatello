@@ -89,7 +89,7 @@ class Communication(Router):
         while True:
             try:
                 self._recvMessage()
-            except _exceptions.WebSocketConnectionClosedException:
+            except:
                 self.connected = False
                 logger.error(f'Dropped connection to server')
                 break
