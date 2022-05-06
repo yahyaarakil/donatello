@@ -9,5 +9,5 @@ module.exports = new mongoose.Schema({
     name: String,
     profilePicture: { type: String, get: v => v ? v : DEFAULT_PROFILE_PICTURE_PATH },
     role: { type: Number, required: true, default: 1 },
-    drones: [{ type: Schema.Types.ObjectId, ref: 'Drone' }]
+    drones: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Drone' }]
 });
