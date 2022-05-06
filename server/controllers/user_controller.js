@@ -13,7 +13,7 @@ const createUser = (user) => {
                 user.save().then((user) => {
                     console.log('👤 New user created and saved');
                     resolve(user);
-                }).catch((err) => reject(err) );
+                }).catch((err) => reject(err));
             });
         }).catch((err) => reject(err));
     });
@@ -35,9 +35,7 @@ const loginUser = (user) => {
                     } else {
                         resolve(false);
                     }
-                }).catch((err) => {
-                    reject(err);
-                });
+                }).catch((err) => reject(err));
             } else {
                 resolve(null);
             }
