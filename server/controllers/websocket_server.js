@@ -42,6 +42,7 @@ module.exports.serveDonatello = (WSS_PORT) => {
                             return;
                         }
                         wss.drones[ws.id] = ws;
+                        ws.sendResponse(message.id, 200, { message: 'Authenticated' });
                     }
 
                     // if request, handle
