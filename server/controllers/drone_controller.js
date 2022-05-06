@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const droneModel = require('../models/drone');
 const userModel = require('../models/user');
 
@@ -15,12 +14,15 @@ const registerDrone = (drone) => {
                     if (user) {
                         drone.user = user._id;
                         drone = new droneModel(drone);
-                        drone.save().then((drone) => {
-                            console.log('🤖 New drone registered');
-                            resolve(drone);
+                        user.drones.push(drone._id);
+                        user.save().then((user) => {
+                            drone.save().then((drone) => {
+                                console.log('🤖 New drone registered');
+                                resolve(drone);
+                            }).catch((err) => reject(err));
                         }).catch((err) => reject(err));
                     } else {
-                        reject(false);
+                        reject(null);
                     }
                 }).catch((err) => reject(err));
             });
@@ -33,10 +35,9 @@ const loginDrone = (droneRead) => {
         bcrypt.compare(drone.password, droneRead.password).then((correctPassword) => {
             if (correctPassword) {
                 drone = stripDroneObject(droneRead);
-                token = jwt.sign(drone, process.env.TOKEN_SIGNATURE_KEY);
-                resolve(token);
+                resolve(drone);
             } else {
-                resolve(false);
+                resolve(null);
             }
         }).catch((err) => reject(err));
     });
@@ -47,17 +48,34 @@ const authenticateDrone = (drone) => {
         droneModel.fineOne({ id: drone.id }).then((droneRead) => {
             // if registered before
             if (droneRead) {
-                loginDrone(droneRead).then((token) => {
-                    resolve(token);
+                loginDrone(droneRead).then((drone) => {
+                    resolve(drone);
                 }).catch((err) => reject(err));
             } else {
                 // register for first time
                 registerDrone(drone).then(() => {
-                    loginDrone(drone).then((token) => {
-                        resolve(token);
+                    loginDrone(drone).then((drone) => {
+                        resolve(drone);
                     }).catch((err) => reject(err));
                 }).catch((err) => reject(err));
             }
         }).catch((err) => reject(err));
     });
+}
+
+const postLog = (drone, log) => {
+
+}
+
+const droneRequests = {
+    postLog: postLog
+}
+
+const serverRequests = {
+}
+
+module.exports = {
+    authenticateDrone: authenticateDrone,
+    droneRequests: droneRequests,
+    serverRequests: serverRequests,
 }
