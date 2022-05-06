@@ -8,5 +8,6 @@ module.exports = new mongoose.Schema({
     password: { type: String, required: true },
     name: String,
     profilePicture: { type: String, get: v => v ? v : DEFAULT_PROFILE_PICTURE_PATH },
-    role: { type: Number, required: true, default: 1 }
+    role: { type: Number, required: true, default: 1 },
+    drones: [{ type: Schema.Types.ObjectId, ref: 'Drone' }]
 });
