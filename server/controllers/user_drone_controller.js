@@ -26,9 +26,9 @@ const getAllLogs = (drone) => {
     });
 }
 
-const getAllLogsBetween = (drone, startDay, endDay) => {
+const getAllLogsBetween = (drone, start, end) => {
     return new Promise((resolve, reject) => {
-        logModel.find({ drone: drone._id, createdAt: { "$gte": startDay, "$lte": endDay } }).then((logsRead) => {
+        logModel.find({ drone: drone._id, createdAt: { "$gte": start, "$lte": end } }).then((logsRead) => {
             logs = [];
             logsRead.forEach(log => {
                 logs.push({ createdAt: log.createdAt, message: log.message });

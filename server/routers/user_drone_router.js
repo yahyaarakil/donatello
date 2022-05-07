@@ -18,8 +18,8 @@ router.get('/:droneID', (req, res) => {
 });
 
 router.get('/:droneID/logs', (req, res) => {
-    if (req.query.startDay && req.query.endDay) {
-        userDroneController.getAllLogsBetween(req.drone, new Date(req.query.startDay * 1000), new Date(req.query.endDay * 1000)).then((logs) => {
+    if (req.query.start && req.query.end) {
+        userDroneController.getAllLogsBetween(req.drone, new Date(req.query.start * 1000), new Date(req.query.end * 1000)).then((logs) => {
             res.status(200).json(logs);
         }).catch((err) => {
             console.log(err);
