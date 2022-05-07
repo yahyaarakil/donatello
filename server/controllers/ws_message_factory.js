@@ -33,7 +33,7 @@ const deserializeMessage = (messageText) => {
     try {
         parsed = JSON.parse(messageText);
         if (parsed.request) {
-            return new Request(parsed.id, parsed.request.method, parsed.request.path, parsed.request.body);
+            return new Request(parsed.id, parsed.request.method.toLowerCase(), parsed.request.path.toLowerCase(), parsed.request.body);
         } else if (parsed.response) {
             return new Response(parsed.id, parsed.response.code, parsed.response.body);
         }
