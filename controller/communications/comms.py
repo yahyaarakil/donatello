@@ -132,7 +132,7 @@ class Communication(Router):
                 self.invoke(message, response) # tree (recursive)
                 self._sendMessage(response)
             elif isinstance(message, Response):
-                logger.debug('Response received')
+                logger.debug(f'Response received with code: {message.code}')
                 if self._response_callback:
                     logger.debug('Response callback invoked')
                     self._response_callback(message)
