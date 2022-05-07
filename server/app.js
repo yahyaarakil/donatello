@@ -3,12 +3,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const authRouting = require('./routers/auth_routing');
 const donatelloCommandsRouting= require('./routers/donatello_commands_routing');
+const userDroneRouter = require('./routers/user_drone_router');
 const webSocketServer = require('./controllers/websocket_server');
 
 const app = express();
 app.use(express.json());
 app.use('/auth', authRouting);
 app.use(donatelloCommandsRouting);
+app.use('/drones', userDroneRouter);
 
 var wss = null;
 
