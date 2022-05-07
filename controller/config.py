@@ -4,6 +4,12 @@ COMS = {
     'SERVER_PORT': 5050,
     'PING_TIMER': 5,
     'MAX_REQ_QUEUE_SIZE': 500,
+    'LOGIN_CREDENTIALS': {
+        'id': 10,
+        'password': 'donatello2022',
+        'name': 'donatello_mk_1',
+        'email': 'yahya.arakil@metu.edu.tr'
+    }
 }
 ARDU = {
     'ARDUPILOT_ADDRESS': 'udpin:localhost:14551',
