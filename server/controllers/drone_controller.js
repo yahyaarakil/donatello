@@ -40,8 +40,7 @@ const loginDrone = (drone, droneRead) => {
     return new Promise((resolve, reject) => {
         bcrypt.compare(drone.password, droneRead.password).then((correctPassword) => {
             if (correctPassword) {
-                drone = stripDroneObject(droneRead);
-                resolve(drone);
+                resolve(droneRead);
             } else {
                 resolve(null);
             }
@@ -60,7 +59,6 @@ const authenticateDrone = (drone) => {
             } else {
                 // register for first time
                 registerDrone(Object.assign(drone)).then((droneRead) => {
-                    drone = stripDroneObject(droneRead);
                     resolve(drone);
                 }).catch((err) => reject(err));
             }
@@ -70,13 +68,11 @@ const authenticateDrone = (drone) => {
 
 const postLog = (drone, log) => {
     return new Promise((resolve, reject) => {
-        droneModel.findOne(drone).then((droneRead) => {
-            log.drone = droneRead._id;
-            log = new logModel(log);
-            log.save().then((logRead) => {
-                droneRead.logs.push(log._id);
-                droneRead.save().then(() => resolve({ code: 200, body: {} })).catch((err) => reject(err));
-            }).catch((err) => resolve({ code: 500, body: {} }));
+        log.drone = drone._id;
+        log = new logModel(log);
+        log.save().then((logRead) => {
+            drone.logs.push(logRead._id);
+            drone.save().then(() => resolve({ code: 200, body: {} })).catch((err) => resolve({ code: 500, body: {} }));
         }).catch((err) => resolve({ code: 500, body: {} }));
     });
 }
