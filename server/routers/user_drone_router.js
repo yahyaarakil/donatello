@@ -18,14 +18,18 @@ router.get('/:droneID', (req, res) => {
 });
 
 router.get('/:droneID/logs', (req, res) => {
-    res.status(200).json(req.user);
+    userDroneController.getAllLogs(req.drone).then((logs) => {
+        res.status(200).json(logs);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ message: 'Error' });
+    });
 });
 
 router.get('/', (req, res) => {
     userDroneController.getAllDrones(req.user).then((drones) => {
         res.status(200).json(drones);
     }).catch((err) => {
-        console.log(err);
         res.status(500).json({ message: 'Error' });
     });
 });

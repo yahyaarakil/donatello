@@ -4,27 +4,25 @@ const logModel = require('../models/log');
 
 const getAllDrones = (user) => {
     return new Promise((resolve, reject) => {
-        try {
-            user.populate('drones').then((populated) => {
-                drones = []
-                populated.drones.forEach(drone => {
-                    drones.push({ id: drone.id, name: drone.name });
-                });
-                resolve(drones);
-            }).catch(() => reject());
-        } catch {
-            reject();
-        }
+        user.populate('drones').then((populated) => {
+            drones = [];
+            populated.drones.forEach(drone => {
+                drones.push({ id: drone.id, name: drone.name });
+            });
+            resolve(drones);
+        }).catch(() => reject());
     });
 }
 
-const getAllLogs = (user, drone) => {
+const getAllLogs = (drone) => {
     return new Promise((resolve, reject) => {
-        droneModel.find(drone).then((droneRead) => {
-            droneRead = droneRead.populate();
-            // resolve(droneRead.logs);
-            resolve(True);
-        }).catch((err) => reject(err));
+        drone.populate('logs').then((populated) => {
+            logs = [];
+            populated.logs.forEach(log => {
+                logs.push({ createdAt: log.createdAt, message: log.message });
+            });
+            resolve(logs);
+        }).catch(() => reject());
     });
 }
 
