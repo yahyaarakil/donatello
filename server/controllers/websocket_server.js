@@ -35,7 +35,7 @@ module.exports.serveDonatello = (WSS_PORT) => {
 
                     // authentication
                     if (!ws.authenticated) {
-                        if (message instanceof messageFactory.Request && message.method.toLowerCase() === 'post' && message.path === 'authenticate') {
+                        if (message instanceof messageFactory.Request && message.method === 'post' && message.path === 'authenticate') {
                             try {
                                 ws.authenticated = await droneController.authenticateDrone(Object.assign(message.body));
                             } catch {
@@ -54,9 +54,11 @@ module.exports.serveDonatello = (WSS_PORT) => {
 
                     // if request, handle
                     if (message instanceof messageFactory.Request) {
-                        droneController.droneRequests[message.method][message.path](ws.authenticated, body).then((response) => {
-                            sendResponse(ws, message.id, response.code, response.body);
-                        }).catch((err) => console.log(err));
+                        if ( droneController.droneRequests[message.method] &&  droneController.droneRequests[message.method][message.path]) {
+                            droneController.droneRequests[message.method][message.path](ws.authenticated, message.body).then((response) => {
+                                sendResponse(ws, message.id, response.code, response.body);
+                            }).catch((err) => console.log(err));
+                        }
                     }
                     // if response, handle
                     else if (message instanceof messageFactory.Response) {
