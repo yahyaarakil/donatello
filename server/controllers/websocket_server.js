@@ -36,7 +36,11 @@ module.exports.serveDonatello = (WSS_PORT) => {
                     // authentication
                     if (!ws.authenticated) {
                         if (message instanceof messageFactory.Request && message.method.toLowerCase() === 'post' && message.path === 'authenticate') {
-                            ws.authenticated = await droneController.authenticateDrone(message.body);
+                            try {
+                                ws.authenticated = await droneController.authenticateDrone(Object.assign(message.body));
+                            } catch {
+                                ws.authenticated = null;
+                            }
                         }
                         if (!ws.authenticated) {
                             sendResponse(ws, message.id, 403, { message: 'Unauthorized' });

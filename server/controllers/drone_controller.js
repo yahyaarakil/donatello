@@ -57,10 +57,9 @@ const authenticateDrone = (drone) => {
                 }).catch((err) => reject(err));
             } else {
                 // register for first time
-                registerDrone(drone).then((droneRead) => {
-                    loginDrone(drone, droneRead).then((drone) => {
-                        resolve(drone);
-                    }).catch((err) => reject(err));
+                registerDrone(Object.assign(drone)).then((droneRead) => {
+                    drone = stripDroneObject(droneRead);
+                    resolve(drone);
                 }).catch((err) => reject(err));
             }
         }).catch((err) => reject(err));
