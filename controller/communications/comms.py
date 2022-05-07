@@ -22,28 +22,16 @@ class Communication(Router):
             threading.Thread(target=self._re_establish_connection).start()
 
     def authenticate(self):
-        authed = False
-        def auth(x):
-            global authed
-            if x.code == 200 :
-                authed = True
+        def auth(res):
+            if res.code == 200 :
                 logger.info('Authenticated with Websocket server successfully')
+                self.connected = True
             else:
-                authed = False
                 logger.info('failed to authenticate with Websocket server')
-        attempts = 0
-        while not authed:
-            logger.info('Attempting to authenticate with Websocket server')
-            self.makeRequest(
-                Request(Method.POST, 'authenticate', COMS['LOGIN_CREDENTIALS']),
-                lambda x: auth(x)
-            )
-            time.sleep(10)
-            attempts += 1
-            if attempts > 5:
-                self.donatello.flags['CRITICAL'] += 1
-                self.donatello.flags['SERVER'] = False
-                break
+                self.connected = False
+        logger.info('Attempting to authenticate with Websocket server')
+        self.makeRequest(Request(Method.POST, 'authenticate', COMS['LOGIN_CREDENTIALS']), auth)
+        time.sleep(5)
 
     def establish_connection(self):
         logger.info('Establishing connection to server')
@@ -57,6 +45,7 @@ class Communication(Router):
             self.donatello.flags['CRITICAL'] += 1
             self.donatello.flags['SERVER'] = True
             self.authenticate()
+            self.postLog('Connected and authenticated')
             self._process_request_queue()
         except ConnectionRefusedError:
             logger.error('Unable to establish connection to server')
@@ -154,6 +143,10 @@ class Communication(Router):
             logger.error(f'No function for method {message.method} on path {message.path}')
         except Exception as e:
             logger.fatal(f'Fatal error occured - {e}')
+
+    def postLog(self, message):
+        if self.connected:
+            self.makeRequest(Request(Method.POST, 'post_log', { 'message': message }))
 
     def stop(self):
         if self.connected:
