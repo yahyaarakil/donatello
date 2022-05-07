@@ -3,8 +3,10 @@ const droneModel = require('../models/drone');
 
 const droneOwnerShip = (req, res, next) => {
     droneModel.findOne({ id: req.params.droneID }).then((droneRead) => {
+        // console.log(droneRead._id.toString());
+        // console.log(req.user.drones);
         if (droneRead) {
-            if (droneRead._id in req.user.drones) {
+            if (req.user.drones.includes(droneRead._id)) {
                 req.drone = droneRead;
                 next();
             } else {
