@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const droneModel = require('../models/drone');
 const userModel = require('../models/user');
+const logModel = require('../models/log');
+const messageFactory = require('./ws_message_factory');
 
 const registerDrone = (drone) => {
     return new Promise((resolve, reject) => {
@@ -67,11 +69,25 @@ const authenticateDrone = (drone) => {
 }
 
 const postLog = (drone, log) => {
-
+    return new Promise((resolve, reject) => {
+        droneModel.findOne(drone).then((droneRead) => {
+            log.drone = droneRead._id;
+            log = new logModel(log);
+            log.save().then((logRead) => {
+                droneRead.logs.push(log._id);
+                droneRead.save().then(() => resolve({ code: 200, body: {} })).catch((err) => reject(err));
+            }).catch((err) => resolve({ code: 500, body: {} }));
+        }).catch((err) => resolve({ code: 500, body: {} }));
+    });
 }
 
 const droneRequests = {
-    postLog: postLog
+    'post': {
+        'post_log': postLog
+    },
+    'get': {
+
+    }
 }
 
 const serverRequests = {

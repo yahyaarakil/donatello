@@ -1,4 +1,4 @@
-// user model
+// drone model
 const mongoose = require('mongoose');
 const droneSchema = require('../schemas/drone');
 
