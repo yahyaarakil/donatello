@@ -6,7 +6,5 @@ module.exports = new mongoose.Schema({
     drone: { type: mongoose.Schema.Types.ObjectId, ref: 'Drone' }
 },
 {
-    timestamps: {
-      createdAt: 'timestamp'
-    }
+    timestamps: true
 });
