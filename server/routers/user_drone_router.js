@@ -18,12 +18,21 @@ router.get('/:droneID', (req, res) => {
 });
 
 router.get('/:droneID/logs', (req, res) => {
-    userDroneController.getAllLogs(req.drone).then((logs) => {
-        res.status(200).json(logs);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).json({ message: 'Error' });
-    });
+    if (req.query.startDay && req.query.endDay) {
+        userDroneController.getAllLogsBetween(req.drone, new Date(req.query.startDay * 1000), new Date(req.query.endDay * 1000)).then((logs) => {
+            res.status(200).json(logs);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).json({ message: 'Error' });
+        });
+    } else {
+        userDroneController.getAllLogs(req.drone).then((logs) => {
+            res.status(200).json(logs);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).json({ message: 'Error' });
+        });
+    }
 });
 
 router.get('/', (req, res) => {

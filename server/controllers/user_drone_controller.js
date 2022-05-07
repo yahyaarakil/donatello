@@ -10,7 +10,7 @@ const getAllDrones = (user) => {
                 drones.push({ id: drone.id, name: drone.name });
             });
             resolve(drones);
-        }).catch(() => reject());
+        }).catch((err) => reject(err));
     });
 }
 
@@ -22,11 +22,24 @@ const getAllLogs = (drone) => {
                 logs.push({ createdAt: log.createdAt, message: log.message });
             });
             resolve(logs);
-        }).catch(() => reject());
+        }).catch((err) => reject(err));
+    });
+}
+
+const getAllLogsBetween = (drone, startDay, endDay) => {
+    return new Promise((resolve, reject) => {
+        logModel.find({ drone: drone._id, createdAt: { "$gte": startDay, "$lte": endDay } }).then((logsRead) => {
+            logs = [];
+            logsRead.forEach(log => {
+                logs.push({ createdAt: log.createdAt, message: log.message });
+            });
+            resolve(logs);
+        }).catch((err) => reject(err));
     });
 }
 
 module.exports = {
     getAllDrones: getAllDrones,
     getAllLogs: getAllLogs,
+    getAllLogsBetween: getAllLogsBetween,
 }
