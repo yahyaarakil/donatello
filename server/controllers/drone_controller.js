@@ -30,7 +30,11 @@ const registerDrone = (drone) => {
     });
 }
 
-const loginDrone = (droneRead) => {
+const stripDroneObject = (drone) => {
+    return { id: drone.id, name: drone.name }
+}
+
+const loginDrone = (drone, droneRead) => {
     return new Promise((resolve, reject) => {
         bcrypt.compare(drone.password, droneRead.password).then((correctPassword) => {
             if (correctPassword) {
@@ -45,16 +49,16 @@ const loginDrone = (droneRead) => {
 
 const authenticateDrone = (drone) => {
     return new Promise((resolve, reject) => {
-        droneModel.fineOne({ id: drone.id }).then((droneRead) => {
+        droneModel.findOne({ id: drone.id }).then((droneRead) => {
             // if registered before
             if (droneRead) {
-                loginDrone(droneRead).then((drone) => {
+                loginDrone(drone, droneRead).then((drone) => {
                     resolve(drone);
                 }).catch((err) => reject(err));
             } else {
                 // register for first time
-                registerDrone(drone).then(() => {
-                    loginDrone(drone).then((drone) => {
+                registerDrone(drone).then((droneRead) => {
+                    loginDrone(drone, droneRead).then((drone) => {
                         resolve(drone);
                     }).catch((err) => reject(err));
                 }).catch((err) => reject(err));

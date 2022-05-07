@@ -57,11 +57,13 @@ def deserialize(serialization: str):
     mesg = json.loads(serialization)
     if len(mesg) < 1:
         raise Exception('Invalid message json')
-    if list(mesg.keys())[0].lower() == 'request':
+    if 'request' in mesg:
         r = Request()
-    elif list(mesg.keys())[0].lower() == 'response':
+        r.__dict__ = mesg['request']
+    elif 'response' in mesg:
         r = Response()
+        r.__dict__ = mesg['response']
     else:
         raise Exception('Invalid message json')
-    r.__dict__ = mesg[list(mesg.keys())[0]]
+    r.id = mesg['id']
     return r
