@@ -1,10 +1,18 @@
 const express = require('express');
 const userController = require('../controllers/user_controller');
-const userAuthMiddleware = require('../middlewares/authentication');
+const userAuthMiddleware = require('../middlewares/user_authentication');
+const verifyRequest = require('../middlewares/verify');
 
 const router = express.Router();
 
-router.post('/register', (req, res) => {
+router.post(
+    '/register',
+    verifyRequest({
+        email: { type: String, required: true},
+        password: { type: String, required: true},
+        name: { type: String, required: true},
+    }),
+    (req, res) => {
     // verify request
     user = req.body;
     // call controller function
@@ -15,7 +23,13 @@ router.post('/register', (req, res) => {
     });
 });
 
-router.post('/login', (req, res) => {
+router.post(
+    '/login',
+    verifyRequest({
+        email: { type: String, required: true},
+        password: { type: String, required: true},
+    }),
+    (req, res) => {
     // verify request
     user = req.body;
     // call controller function

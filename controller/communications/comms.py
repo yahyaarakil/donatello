@@ -5,6 +5,7 @@ from config import COMS
 from .message import Message, Request, Response, deserialize
 from websocket import create_connection, _exceptions
 from .router import Router
+from .message import Method
 
 logger = logging.getLogger('COMMUNICATION')
 
@@ -20,6 +21,30 @@ class Communication(Router):
         if not self.establish_connection():
             threading.Thread(target=self._re_establish_connection).start()
 
+    def authenticate(self):
+        authed = False
+        def auth(x):
+            global authed
+            if x.code == 200 :
+                authed = True
+                logger.info('Authenticated with Websocket server successfully')
+            else:
+                authed = False
+                logger.info('failed to authenticate with Websocket server')
+        attempts = 0
+        while not authed:
+            logger.info('Attempting to authenticate with Websocket server')
+            self.makeRequest(
+                Request(Method.POST, 'authenticate', COMS['LOGIN_CREDENTIALS']),
+                lambda x: auth(x)
+            )
+            time.sleep(10)
+            attempts += 1
+            if attempts > 5:
+                self.donatello.flags['CRITICAL'] += 1
+                self.donatello.flags['SERVER'] = False
+                break
+
     def establish_connection(self):
         logger.info('Establishing connection to server')
         self.listen_thread = None
@@ -31,6 +56,7 @@ class Communication(Router):
             logger.info('Established connection to server')
             self.donatello.flags['CRITICAL'] += 1
             self.donatello.flags['SERVER'] = True
+            self.authenticate()
             self._process_request_queue()
         except ConnectionRefusedError:
             logger.error('Unable to establish connection to server')
