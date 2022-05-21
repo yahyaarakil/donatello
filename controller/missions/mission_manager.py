@@ -64,3 +64,11 @@ class MissionManager:
         self.donatello.e.set()
         logger.info('Mission Started')
     
+    def set_geofence(self, fence_file):
+        logger.info("Setting up GeoFence")
+
+        try:
+            self.donatello.ardu.set_inclusion_fence(fence_file)
+
+        except:
+            logger.error('GeoFence cannot Upload due to failure')

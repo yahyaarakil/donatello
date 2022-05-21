@@ -1,4 +1,5 @@
 from pymavlink import mavutil
+from pymavlink import mavwp
 import logging
 from config import ARDU
 from .parameters import param_dict
@@ -77,23 +78,51 @@ class Ardu:
         )
         logger.info(f'Going to {gps_coordinate}')
 
-    # def set_includion_fence(self, fence_points):
-    #     if self._long_req((
-    #         mavutil.mavlink.MAV_CMD_DO_FENCE_ENABLE,
-    #         0,
-    #         1,
-    #         0,
-    #         0,
-    #         0,
-    #         0,
-    #         0,
-    #         0,
-    #     )):
-    #         logger.info('Fence enabled')
-    #         for point in fence_points:
-    #             pass
-    #     else:
-    #         raise Exception()
+
+    def set_inclusion_fence(self, fence_file):
+        if self._long_req((
+            mavutil.mavlink.MAV_CMD_DO_FENCE_ENABLE, 
+            0,
+            1, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0
+        )):
+            logger.info('Fence enabled')
+            self.fence_handler = mavwp.MAVFenceLoader()
+            self.fence_handler.load(fence_file)
+            for i in range(self.fence_handler.count()):
+                self.connection.master.mav.send(self.fence_handler.point(i))
+            logger.info('Fence Loaded')
+
+        else:
+            logger.info('Failed Fence')
+            raise Exception()
+
+    def set_rc_channel_pwm(self, channel_id, pwm=1500):
+        """ Set RC channel pwm value switch to MANUAL mode !!!
+        Args:
+            channel_id (TYPE): Channel ID
+            pwm (int, optional): Channel pwm value 1100-1900 1500 is idle
+        """
+        if channel_id < 1 or channel_id > 18:
+            print("Channel does not exist.")
+            return
+
+        # Mavlink 2 supports up to 18 channels:
+        # https://mavlink.io/en/messages/common.html#RC_CHANNELS_OVERRIDE
+        # https://www.ardusub.com/developers/rc-input-and-output.html#rc-inputs
+        # https://discuss.bluerobotics.com/t/pymavlink-send-rc-issue/11302
+
+        rc_channel_values = [65535 for _ in range(8)]
+        rc_channel_values[channel_id - 1] = pwm
+        self.connection.master.mav.rc_channels_override_send(
+            self.connection.master.target_system,
+            self.connection.master.target_component,
+            *rc_channel_values)
 
     def change_mode(self,mode):
         # Check if mode is available
