@@ -220,9 +220,7 @@ class Ardu:
         return msg.voltage_battery
 
     def _mavset(self, name, value, parm_type=None, retries=3):
-        got_ack = False
-
-        while retries > 0 and not got_ack:
+        while retries > 0:
             retries -= 1
             self.connection.mav.param_set_send(
                 self.connection.target_system,
@@ -235,11 +233,8 @@ class Ardu:
             while time.time() - tstart < 1:
                 ack = self.connection.recv_match(type='PARAM_VALUE', blocking=True)
                 if str(name).upper() == str(ack.param_id).upper():
-                    got_ack = True
-                    break
-        if not got_ack:
-            return False
-        return True
+                    return True
+        return False
 
     def set_parameters(self):
         for param_key, param_value in param_dict.items():

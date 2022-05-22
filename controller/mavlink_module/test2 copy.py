@@ -8,15 +8,7 @@ master.wait_heartbeat()
 
 fenceloader = mavwp.MAVFenceLoader(master.target_system, master.target_component)
 
-def enable_fence(bool):
-    #enable fence
-    en_d = 1 if bool else 0
-    master.mav.command_long_send(
-                master.target_system,
-                master.target_component,
-                mavutil.mavlink.MAV_CMD_DO_FENCE_ENABLE, 0,
-                en_d, 0, 0, 0, 0, 0, 0)
-    master.recv_match(type="COMMAND_ACK", blocking=True)
+
 
 def fetch_fence_point(i):
     '''fetch one fence point'''
@@ -35,8 +27,6 @@ def fetch_fence_point(i):
         return None
     return p
 
-
-enable_fence(False)
 fenceloader.load('./fence.txt')
 master.mav.param_set_send(
     master.target_system,
@@ -49,7 +39,7 @@ master.mav.param_set_send(
     master.target_system,
     master.target_component,
     "FENCE_ACTION".encode('utf8'),
-    0,
+    mavutil.mavlink.FENCE_ACTION_NONE,
     3
 )
 
@@ -64,8 +54,7 @@ for i in range(fenceloader.count()):
         print('NO :(', p)
     print(p)
 
-enable_fence(True)
-master.arducopter_arm()
+# master.arducopter_arm()
 
 print("Waiting for the vehicle to arm")
 master.motors_armed_wait()
