@@ -20,6 +20,7 @@ class Communication(Router):
         self._request_queue = []
         if not self.establish_connection():
             threading.Thread(target=self._re_establish_connection).start()
+        logger.debug("INITED COMS")
 
     def authenticate(self):
         def auth(res):
@@ -129,6 +130,7 @@ class Communication(Router):
             if isinstance(message, Request):
                 logger.debug('Request received')
                 response = Response()
+                response.id = message.id
                 self.invoke(message, response) # tree (recursive)
                 self._sendMessage(response)
             elif isinstance(message, Response):

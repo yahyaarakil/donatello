@@ -25,7 +25,7 @@ class Message:
         return json.dumps(self.__dict__)
 
 class Request(Message):
-    def __init__(self, method: Method = None, path: str = None, body: dict = None, id: int = 0):
+    def __init__(self, method: Method = None, path: str = None, body: dict = {}, id: int = 0):
         super().__init__(body=body, id=id)
         self.method = method
         self.path = path
@@ -34,7 +34,7 @@ class Request(Message):
         return json.dumps({ 'id': self.id, 'request': { 'method': self.method, 'path': self.path, 'body': self.body } })
 
 class Response(Message):
-    def __init__(self, code: int = None, body: dict = None, id: int = 0):
+    def __init__(self, code: int = None, body: dict = {}, id: int = 0):
         super().__init__(body=body, id=id)
         self.code = code
 

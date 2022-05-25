@@ -1,6 +1,7 @@
 const userModel = require('../models/user');
 const droneModel = require('../models/drone');
 const logModel = require('../models/log');
+const wss = require('../controllers/websocket_server');
 
 const getAllDrones = (user) => {
     return new Promise((resolve, reject) => {
@@ -38,8 +39,42 @@ const getAllLogsBetween = (drone, start, end) => {
     });
 }
 
+// # donatello.com.makeRequest(Request(Method.POST, 'mission.schedule', {
+// #     'pattern': [
+// #         (35.364147, 33.118160),
+// #         (35.364391, 33.119475),
+// #         (35.363998, 33.120464)
+// #     ],
+// #     'time': datetime.timestamp(datetime.now()) + 15
+
+const scheduleMission = (drone, user, body) => {
+    return new Promise((resolve, reject) => {
+        // console.log(wss);
+        if (!wss.makeRequest(drone.id, 'POST', 'mission.schedule', {
+            pattern: [
+                [35.364147, 33.118160],
+                [35.364391, 33.119475],
+                [35.363998, 33.120464]
+            ],
+            time: new Date().getTime()/1000 + 15
+        }, () => {resolve({ status: 200, message: 'Success' })} )) {
+            resolve({ status: 403, message: 'Drone not connected' });
+        }
+    });
+}
+
+const stopDrone = (drone, user, body) => {
+    return new Promise((resolve, reject) => {
+        // console.log(wss);
+        if (!wss.makeRequest(drone.id, 'POST', 'stop', {}, () => resolve({ status: 200, message: 'Success' }))) {
+            resolve({ status: 403, message: 'Drone not connected' });
+        }
+    });
+}
+
 module.exports = {
     getAllDrones: getAllDrones,
     getAllLogs: getAllLogs,
     getAllLogsBetween: getAllLogsBetween,
+    scheduleMission: scheduleMission,
 }

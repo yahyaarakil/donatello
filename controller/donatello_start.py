@@ -148,8 +148,6 @@ class DDonatello(Donatello):
 if __name__ == "__main__":
     try:
         logging.basicConfig(level="DEBUG")
-
-        # start
         donatello = DDonatello()
 
         # donatello.msn.run_mission(
@@ -161,14 +159,14 @@ if __name__ == "__main__":
         #         ]
         #     )
         # )
-        donatello.com.makeRequest(Request(Method.POST, 'mission.schedule', {
-            'pattern': [
-                (35.364147, 33.118160),
-                (35.364391, 33.119475),
-                (35.363998, 33.120464)
-            ],
-            'time': datetime.timestamp(datetime.now()) + 15
-        }))
+        # donatello.com.makeRequest(Request(Method.POST, 'mission.schedule', {
+        #     'pattern': [
+        #         (35.364147, 33.118160),
+        #         (35.364391, 33.119475),
+        #         (35.363998, 33.120464)
+        #     ],
+        #     'time': datetime.timestamp(datetime.now()) + 15
+        # }))
 
         # update
         while True:

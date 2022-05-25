@@ -3,19 +3,30 @@ const messageFactory = require('./ws_message_factory');
 const droneController = require('../controllers/drone_controller');
 
 // send/recieve functions
-const makeRequest = (ws, method, path, body, cb) => {
+const makeRequest = (droneId, method, path, body, cb) => {
+    ws = wssV.drones[droneId];
+    if (!ws) {
+        return false;
+    }
     do {
         id = Math.floor(Math.random() * 4119);
     } while (id in ws.requests);
     request = new messageFactory.Request(id, method, path, body, cb);
     ws.requests[request.id] = request;
-    ws.send(request.serializeMessage());
+
+    msS = request.serializeMessage();
+    ws.send(msS);
+    return true;
 }
+
+module.exports.makeRequest = makeRequest;
 
 const sendResponse = (ws, id, code, body) => {
     response = new messageFactory.Response(id, code, body);
     ws.send(response.serializeMessage());
 }
+
+let wssV = null;
 
 module.exports.serveDonatello = (WSS_PORT) => {
     return new Promise((resolve, reject) => {
@@ -46,7 +57,7 @@ module.exports.serveDonatello = (WSS_PORT) => {
                             sendResponse(ws, message.id, 403, { message: 'Unauthorized' });
                             return;
                         }
-                        wss.drones[ws.id] = ws;
+                        wss.drones[ws.authenticated.id] = ws;
                         sendResponse(ws, message.id, 200, { message: 'Authenticated' });
                         console.log('Websocket server authenticated a drone');
                         return;
@@ -62,7 +73,10 @@ module.exports.serveDonatello = (WSS_PORT) => {
                     }
                     // if response, handle
                     else if (message instanceof messageFactory.Response) {
-                        request = ws.requests[message.id];
+                        request = ws.requests[message.id.toString()];
+                        console.log(ws.requests)
+                        console.log(message.id)
+                        console.log(request)
                         request.cb(ws.authenticated, message.code, message.body);
                         delete ws.requests[message.id];
                     }
@@ -84,7 +98,7 @@ module.exports.serveDonatello = (WSS_PORT) => {
                     clearInterval(interval);
                 });
             });
-
+            wssV = wss;
             resolve(wss);
         }
         catch(err) {
