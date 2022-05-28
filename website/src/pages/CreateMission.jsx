@@ -120,6 +120,7 @@ function Body({ myVar }) {
         <div className="body-div">
             <ul className="mission">
                 <div>
+                <form onSubmit={handleSubmit}>
                     <div>
                         <p>top: {myVar.top}</p>
                         <p>bottom: {myVar.bottom}</p>
@@ -130,13 +131,16 @@ function Body({ myVar }) {
                         <input
                             type="text"
                             id='missionName'
+                            ref={nameRef}
                             autoComplete="off"
+                            onChange={(e) => setName(e.target.value)}
+                            value={name}
                             required
                             placeholder="Mission Name"
                         />
                     </div>
                     <div>
-                        <select class="selectpicker" data-style="btn-info" name="selectpicker">
+                        <select class="selectpicker" data-style="btn-info" name="selectpicker" value={device} onChange={(e) => setDevice(e.target.value)}>
                             <optgroup label="Select Device">
                                 <option name="table1" value="1">Device 1</option>
                                 <option name="table2" value="2">Device 2</option>
@@ -144,11 +148,11 @@ function Body({ myVar }) {
                         </select>
                     </div>
                     <div>
-                        <form onSubmit={handleSubmit}>
+                        
                             <button>Create Mission</button>
-                        </form>
+                        
                     </div>
-
+                </form>
                 </div>
             </ul>
         </div>
