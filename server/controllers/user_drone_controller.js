@@ -51,12 +51,14 @@ const scheduleMission = (drone, user, body) => {
     return new Promise((resolve, reject) => {
         // console.log(wss);
         if (!wss.makeRequest(drone.id, 'POST', 'mission.schedule', {
-            pattern: [
-                [35.364147, 33.118160],
-                [35.364391, 33.119475],
-                [35.363998, 33.120464]
-            ],
-            time: new Date().getTime()/1000 + 15
+            pattern: body.pattern,
+            // [
+            //     [35.24658776950742, 33.028336778184546],
+            //     [35.2465098293795, 33.028543109507105],
+            //     // [35.363998, 33.120464]
+            // ],
+            // time: new Date().getTime()/1000 + 15
+            time: new Date().getTime()/1000 + 5
         }, () => {resolve({ status: 200, message: 'Success' })} )) {
             resolve({ status: 403, message: 'Drone not connected' });
         }
@@ -72,9 +74,19 @@ const stopDrone = (drone, user, body) => {
     });
 }
 
+const setMode = (drone, user, body) => {
+    return new Promise((resolve, reject) => {
+        // console.log(wss);
+        if (!wss.makeRequest(drone.id, 'POST', 'mission.mode', { mode: body.mode }, () => resolve({ status: 200, message: 'Success' }))) {
+            resolve({ status: 403, message: 'Drone not connected' });
+        }
+    });
+}
+
 module.exports = {
     getAllDrones: getAllDrones,
     getAllLogs: getAllLogs,
     getAllLogsBetween: getAllLogsBetween,
     scheduleMission: scheduleMission,
+    setMode: setMode,
 }

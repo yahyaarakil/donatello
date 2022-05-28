@@ -8,6 +8,12 @@ from config import GEN, MOV
 import pickle, copy
 import numpy as np
 
+state_translation = {
+    'rtl' : State.RTL,
+    'idle' : State.IDLE,
+    'manual' : State.IDLE,
+}
+
 class DDonatello(Donatello):
     def load_settings(self):
         try:
@@ -48,12 +54,26 @@ class DDonatello(Donatello):
         self._target_frame_time = 1/GEN['TARGET_REFRESH_RATE']
         self._refresh_counter = 0
 
+        def change_mode(mode):
+            try:
+                mode = mode.lower()
+                if mode != 'rtl':
+                    self.ardu.change_mode(mode)
+                else:
+                    self.ardu.arm()
+                    self.ardu.return_to_launch()
+                    self.target = self.ardu.home
+                self.state = state_translation[mode]
+            except:
+                print("ERR")
+
         self.scheduleMissionRouter = Router()
         self.scheduleMissionRouter.post('now', self.msn.start_new_mission)
         self.scheduleMissionRouter.post('schedule', self.msn.schedule_new_mission)
         self.scheduleMissionRouter.get('missions', self.msn.get_all_mission)
         self.scheduleMissionRouter.get('current', self.msn.get_current_mission)
         self.scheduleMissionRouter.get('', self.msn.get_mission_by_id)
+        self.scheduleMissionRouter.post('mode', lambda req, res: change_mode(req.body['mode']))
         self.com.use('mission', self.scheduleMissionRouter)
 
         self.com.post('command.stop',
@@ -70,6 +90,9 @@ class DDonatello(Donatello):
     @state.setter
     def state(self, value: State):
         self._state = value
+        if value == State.ASLEEP:
+            time.sleep(5)
+            self.ardu.disarm()
         self.logger.info(f'State: {self._state}')
 
     @property
@@ -139,7 +162,7 @@ class DDonatello(Donatello):
         frame_time = time.time() - start_time
 
         self._refresh_counter += 1
-        if self._refresh_counter > 240:
+        if self._refresh_counter > 5:
             self.logger.info(f'Refresh Rate: {1.0 / (frame_time)} Hz') # FPS = 1 / time to process loop
             self.logger.info(f'Battery: {self.ardu.get_battery_percentage()}%') # FPS = 1 / time to process loop
             self._refresh_counter = 0

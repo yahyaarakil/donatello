@@ -53,10 +53,9 @@ class MissionManager:
         logger.info('Starting mission')
         try:
             self.donatello.ardu.arm()
-            self.donatello.ardu.change_mode('GUIDED')
         except:
             logger.error('Mission cannot start due to failure to arm')
-            self.donatello.ardu.return_to_launch()
+            # self.donatello.ardu.return_to_launch()
             return
         self.current_mission = mission
         self.donatello.state = State.IN_MISSION

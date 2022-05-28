@@ -163,6 +163,7 @@ class Ardu:
 
     def arm(self):
         try:
+            self.change_mode('GUIDED')
             self._arm(1)
             logger.info('Armed')
         except Exception as e:

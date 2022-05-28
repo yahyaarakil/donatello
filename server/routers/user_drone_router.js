@@ -41,6 +41,12 @@ router.post('/:droneID/missions/schedule', (req, res) => {
     });
 });
 
+router.post('/:droneID/missions/mode/:mode', (req, res) => {
+    userDroneController.setMode(req.drone, req.user, req.params).then((response) => {
+        res.status(response.status).json({ message: response.message });
+    });
+});
+
 router.get('/', (req, res) => {
     userDroneController.getAllDrones(req.user).then((drones) => {
         res.status(200).json(drones);
