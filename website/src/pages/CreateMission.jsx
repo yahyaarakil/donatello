@@ -89,18 +89,7 @@ function Map({ setMyVar }) {
 }
 
 function Body({ myVar }) {
-<<<<<<< Updated upstream
 
-    const handleSubmit = async (e) => {
-        if(myVar.top != 0){
-            console.log("Let's go");
-            <Navigate to="/MainPage"/>
-        }
-        else{
-            console.log("Sad")
-        }
-
-=======
     const nameRef = useRef();
     const [name, setName] = useState("");
     
@@ -124,14 +113,13 @@ function Body({ myVar }) {
                        "token": sessionStorage.getItem("token")}
         })
         
->>>>>>> Stashed changes
+
     }
 
     return (
         <div className="body-div">
             <ul className="mission">
                 <div>
-<<<<<<< Updated upstream
                     <div>
                         <p>top: {myVar.top}</p>
                         <p>bottom: {myVar.bottom}</p>
@@ -160,40 +148,6 @@ function Body({ myVar }) {
                             <button>Create Mission</button>
                         </form>
                     </div>
-=======
-                    <form onSubmit={handleSubmit}>
-                        <div>
-                            <p>top: {myVar.top}</p>
-                            <p>bottom: {myVar.bottom}</p>
-                            <p>left: {myVar.left}</p>
-                            <p>right: {myVar.right}</p>    
-                        </div>
-                        <div>
-                            <input
-                                type="text"
-                                id='name'
-                                ref={nameRef}
-                                autoComplete="off"
-                                onChange={(e) => setName(e.target.value)}
-                                value={name}
-                                required
-                                placeholder="Mission Name"
-                            />
-                        </div>
-                        <div>
-                            <select class="selectpicker" data-style="btn-info" name="selectpicker" value={device} onChange={(e) => setDevice(e.target.value)}>
-                                <optgroup label="Select Device">
-                                    <option name="table1" value="1">Device 1</option>
-                                    <option name="table2" value="2">Device 2</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div>
-                            <button>Clean Area</button>
-                        </div>
-                    </form>
-                    
->>>>>>> Stashed changes
 
                 </div>
             </ul>
