@@ -7,6 +7,7 @@ import { EditControl } from "react-leaflet-draw"
 import {Navigate} from "react-router-dom";
 
 
+
 import "leaflet-draw/dist/leaflet.draw.css"
 
 import "../styles/CreateMission.css"
@@ -33,12 +34,18 @@ function Map({ setMyVar }) {
             layer = e.layer;
         if (type === 'rectangle') {
             layer.on('mouseover', function () {
-                var temp = getCorners(layer);
-                console.log(temp)
-                temp.top = temp[0].lat;
-                temp.bottom = temp[2].lat;
-                temp.left = temp[0].lng;
-                temp.right = temp[2].lng;
+                var temp = {
+                    pattern: []
+
+                };
+            
+                temp.pattern = getCorners(layer);
+                
+                temp.top = temp.pattern[0].lat;
+                temp.bottom = temp.pattern[2].lat;
+                temp.left = temp.pattern[0].lng;
+                temp.right = temp.pattern[2].lng;
+
                 console.log(temp)
                 setMyVar(temp);
 
@@ -52,10 +59,13 @@ function Map({ setMyVar }) {
         // store the ref for future access to content
         setEditableFG(reactFGref);
     };
+    
 
     return (
-        <MapContainer center={[35.247051, 33.024617]} zoom={12}>
+        <MapContainer center={[35.247051, 33.024617]} zoom={16}>
             <TileLayer
+                minZoom={15}
+                maxZoom={18}
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
             />
@@ -73,12 +83,13 @@ function Map({ setMyVar }) {
                     }}
                     onCreated={onCreated} />
             </FeatureGroup>
-            )
+            
         </MapContainer>
     );
 }
 
 function Body({ myVar }) {
+<<<<<<< Updated upstream
 
     const handleSubmit = async (e) => {
         if(myVar.top != 0){
@@ -89,12 +100,38 @@ function Body({ myVar }) {
             console.log("Sad")
         }
 
+=======
+    const nameRef = useRef();
+    const [name, setName] = useState("");
+    
+    const deviceRef = useRef();
+    const [device, setDevice] = useState("");
+   
+    
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(myVar)
+        axios.post("http://localhost:8080/drones/"+ device + "/missions/schedule" ,
+        {
+            "pattern": myVar.pattern,
+            "time": Date.now(),
+            "name": name
+
+        },
+        {
+            headers: { "content-type": "application/json", 
+                       "token": sessionStorage.getItem("token")}
+        })
+        
+>>>>>>> Stashed changes
     }
 
     return (
         <div className="body-div">
             <ul className="mission">
                 <div>
+<<<<<<< Updated upstream
                     <div>
                         <p>top: {myVar.top}</p>
                         <p>bottom: {myVar.bottom}</p>
@@ -123,6 +160,40 @@ function Body({ myVar }) {
                             <button>Create Mission</button>
                         </form>
                     </div>
+=======
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <p>top: {myVar.top}</p>
+                            <p>bottom: {myVar.bottom}</p>
+                            <p>left: {myVar.left}</p>
+                            <p>right: {myVar.right}</p>    
+                        </div>
+                        <div>
+                            <input
+                                type="text"
+                                id='name'
+                                ref={nameRef}
+                                autoComplete="off"
+                                onChange={(e) => setName(e.target.value)}
+                                value={name}
+                                required
+                                placeholder="Mission Name"
+                            />
+                        </div>
+                        <div>
+                            <select class="selectpicker" data-style="btn-info" name="selectpicker" value={device} onChange={(e) => setDevice(e.target.value)}>
+                                <optgroup label="Select Device">
+                                    <option name="table1" value="1">Device 1</option>
+                                    <option name="table2" value="2">Device 2</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div>
+                            <button>Clean Area</button>
+                        </div>
+                    </form>
+                    
+>>>>>>> Stashed changes
 
                 </div>
             </ul>

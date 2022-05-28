@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import NavBar from './NavBar';
-import Footer from "./Footer"
+import Footer from "./Footer";
+
 import { useRef, useState, useEffect } from 'react';
 import {Navigate} from "react-router-dom";
 import "../styles/LoginPage.css"
@@ -15,6 +16,7 @@ export const LoginPage = () => {
     const [errMsg, setErrMsg] = useState("");
     const [success, setSuccess] = useState("");
 
+
     useEffect(() => {
         userRef.current.focus();
     }, []);
@@ -27,18 +29,19 @@ export const LoginPage = () => {
         e.preventDefault();
         console.log(user, pwd);
         try {
-            axios.post("http://localhost:3001/login",
+            axios.post("http://localhost:8080/auth/login",
                 {
-                    username: user,
-                    passw: pwd,
+                    email: user,
+                    password: pwd,
                 },
                 {
                     headers: { "content-type": "application/json" }
                 }
             )
                 .then(function (response) {
-                    if (response.data === "Helloo") {
-                        console.log("It's correct");
+                    console.log(response.data.token)
+                    if (response.status === 200) {
+                        sessionStorage.setItem('token',JSON.stringify(response.data.token));
                         setSuccess(true);
                     }
                 })
