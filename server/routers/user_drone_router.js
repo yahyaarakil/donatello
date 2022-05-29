@@ -35,14 +35,22 @@ router.get('/:droneID/logs', (req, res) => {
     }
 });
 
+router.get('/:droneID/missions', (req, res) => {
+    userDroneController.getAllMissions(req.drone, req.user).then((missions) => {
+        res.status(200).json(missions);
+    }).catch((err) => {
+        res.status(500).json({ message: 'Error' });
+    });
+});
+
 router.post('/:droneID/missions/schedule', (req, res) => {
-    userDroneController.scheduleMission(req.drone, req.user, req.body).then((response) => {
+    userDroneController.scheduleMission(req.drone, req.body).then((response) => {
         res.status(response.status).json({ message: response.message });
     });
 });
 
 router.post('/:droneID/missions/mode/:mode', (req, res) => {
-    userDroneController.setMode(req.drone, req.user, req.params).then((response) => {
+    userDroneController.setMode(req.drone, req.params).then((response) => {
         res.status(response.status).json({ message: response.message });
     });
 });

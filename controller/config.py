@@ -1,6 +1,7 @@
 COMS = {
     'WEB_PROTOCOL': 'ws',
-    'SERVER_ADDRESS':'192.168.43.203',
+    # 'SERVER_ADDRESS':'192.168.43.203',
+    'SERVER_ADDRESS':'localhost',
     'SERVER_PORT': 5050,
     'PING_TIMER': 5,
     'MAX_REQ_QUEUE_SIZE': 500,

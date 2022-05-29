@@ -46,7 +46,7 @@ class Response(Message):
         return self
 
     def json(self, obj: object):
-        self.body = json.dumps(obj)
+        self.body = obj
         return self
 
     def text(self, obj: object):

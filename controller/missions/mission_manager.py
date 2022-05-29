@@ -1,3 +1,4 @@
+import copy, pickle
 from .mission import Mission
 from states import *
 import logging
@@ -6,25 +7,36 @@ logger = logging.getLogger('MISSIONS')
 
 class MissionManager:
     def __init__(self, donatello) -> None:
-        self.missions = []
+        try:
+            logger.info('Loading missions')
+            with open('missions.missions', 'rb') as f:
+                self.missions = pickle.load(f)
+        except FileNotFoundError:
+            self.missions = []
         self.mission_queue = []
         self.donatello = donatello
 
     def get_current_mission(self, req, res):
-        pass
+        res.status(200).json({ 'mission': self.current_mission if self.current_mission else '' })
 
     def get_mission_by_id(self, req, res):
         pass
 
     def get_all_mission(self, req, res):
-        pass
+        missions_ser = []
+        for mission in self.missions:
+            missions_ser.append(mission.serialize())
+        res.status(200).json({ 'missions': missions_ser })
 
     def start_new_mission(self, req, res):
         res.status(200).text('test')
-        print(req, res)
 
     def schedule_new_mission(self, req, res):
-        self.donatello.sch.schedule(self.start_scheduled_mission, (Mission(req.body['pattern']),)).once(req.body['time'])
+        mission = Mission(req.body['pattern'], req.body['name'], req.body['time'])
+        self.donatello.sch.schedule(self.start_scheduled_mission, (mission,)).once(req.body['time'])
+        self.missions.append(mission)
+        with open('missions.missions', 'wb') as f:
+            pickle.dump(self.missions, f)
         res.status(200).text('Mission Scheduled')
 
     def start_scheduled_mission(self, mission: Mission):
@@ -57,7 +69,7 @@ class MissionManager:
             logger.error('Mission cannot start due to failure to arm')
             # self.donatello.ardu.return_to_launch()
             return
-        self.current_mission = mission
+        self.current_mission = Mission(mission.path, mission.name, mission.time)
         self.donatello.state = State.IN_MISSION
         self.donatello.mission_state = MissionState.IDLE
         self.donatello.e.set()

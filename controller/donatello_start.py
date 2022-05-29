@@ -58,7 +58,7 @@ class DDonatello(Donatello):
             try:
                 mode = mode.lower()
                 if mode != 'rtl':
-                    self.ardu.change_mode(mode)
+                    self.ardu.change_mode(mode.upper())
                 else:
                     self.ardu.arm()
                     self.ardu.return_to_launch()
@@ -68,20 +68,16 @@ class DDonatello(Donatello):
                 print("ERR")
 
         self.scheduleMissionRouter = Router()
-        self.scheduleMissionRouter.post('now', self.msn.start_new_mission)
-        self.scheduleMissionRouter.post('schedule', self.msn.schedule_new_mission)
-        self.scheduleMissionRouter.get('missions', self.msn.get_all_mission)
-        self.scheduleMissionRouter.get('current', self.msn.get_current_mission)
-        self.scheduleMissionRouter.get('', self.msn.get_mission_by_id)
-        self.scheduleMissionRouter.post('mode', lambda req, res: change_mode(req.body['mode']))
-        self.com.use('mission', self.scheduleMissionRouter)
 
-        self.com.post('command.stop',
-            lambda req, res: (
-                res.status(200).text('Stopped'),
-                self.stop()
-            )
-        )
+        # implement now
+        self.scheduleMissionRouter.post('schedule', self.msn.schedule_new_mission) # done
+        self.scheduleMissionRouter.get('missions', self.msn.get_all_mission) # done
+        self.scheduleMissionRouter.get('current', self.msn.get_current_mission) # done
+        self.scheduleMissionRouter.post('mode', lambda req, res: change_mode(req.body['mode']))
+
+        # implement later
+        self.scheduleMissionRouter.get('', self.msn.get_mission_by_id)
+        self.com.use('mission', self.scheduleMissionRouter)
 
     @property
     def state(self):

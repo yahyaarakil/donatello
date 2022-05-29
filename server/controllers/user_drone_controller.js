@@ -47,7 +47,7 @@ const getAllLogsBetween = (drone, start, end) => {
 // #     ],
 // #     'time': datetime.timestamp(datetime.now()) + 15
 
-const scheduleMission = (drone, user, body) => {
+const scheduleMission = (drone, body) => {
     return new Promise((resolve, reject) => {
         // console.log(wss);
         if (!wss.makeRequest(drone.id, 'POST', 'mission.schedule', {
@@ -57,27 +57,28 @@ const scheduleMission = (drone, user, body) => {
             //     [35.2465098293795, 33.028543109507105],
             //     // [35.363998, 33.120464]
             // ],
-            // time: new Date().getTime()/1000 + 15
-            time: new Date().getTime()/1000 + 5
+            time: new Date().getTime()/1000 + 1,
+            // time: body.time,
+            name: body.name
         }, () => {resolve({ status: 200, message: 'Success' })} )) {
             resolve({ status: 403, message: 'Drone not connected' });
         }
     });
 }
 
-const stopDrone = (drone, user, body) => {
+const setMode = (drone, body) => {
     return new Promise((resolve, reject) => {
         // console.log(wss);
-        if (!wss.makeRequest(drone.id, 'POST', 'stop', {}, () => resolve({ status: 200, message: 'Success' }))) {
+        if (!wss.makeRequest(drone.id, 'POST', 'mission.mode', { mode: body.mode }, () => resolve({ status: 200, message: 'Success' }))) {
             resolve({ status: 403, message: 'Drone not connected' });
         }
     });
 }
 
-const setMode = (drone, user, body) => {
+const getAllMissions = (drone, body) => {
     return new Promise((resolve, reject) => {
         // console.log(wss);
-        if (!wss.makeRequest(drone.id, 'POST', 'mission.mode', { mode: body.mode }, () => resolve({ status: 200, message: 'Success' }))) {
+        if (!wss.makeRequest(drone.id, 'GET', 'mission.missions', {}, (authenticated, code, body) => resolve(body.missions))) {
             resolve({ status: 403, message: 'Drone not connected' });
         }
     });
@@ -89,4 +90,5 @@ module.exports = {
     getAllLogsBetween: getAllLogsBetween,
     scheduleMission: scheduleMission,
     setMode: setMode,
+    getAllMissions: getAllMissions,
 }

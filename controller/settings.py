@@ -5,6 +5,6 @@ settings = {
         # 0 - ignore new mission
         # 1 - queue up new mission and run it as soon as current mission is over
         # 2 - abort current mission and run new mission
-        'schedule_override_behavior': 0
+        'schedule_override_behavior': 2
     }
 }
