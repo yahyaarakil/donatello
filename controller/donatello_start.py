@@ -2,6 +2,7 @@ from datetime import datetime
 from communications import Router, Request, Method, Message
 from donatello_framework import Donatello
 from missions import Mission, MissionManager
+from other_requests import Requests
 import logging, time, threading
 from states import *
 from config import GEN, MOV
@@ -41,6 +42,7 @@ class DDonatello(Donatello):
         self._mission_state = MissionState.IDLE
         self.e = threading.Event()
         self.msn = MissionManager(self)
+        self.requests = Requests(self)
 
         self._update_dict = {
             State.ASLEEP: self._sleep_update,
@@ -77,6 +79,10 @@ class DDonatello(Donatello):
 
         # implement later
         self.scheduleMissionRouter.get('', self.msn.get_mission_by_id)
+
+        # other requests
+        self.com.get('vitals', self.requests.get_vitals)
+
         self.com.use('mission', self.scheduleMissionRouter)
 
     @property

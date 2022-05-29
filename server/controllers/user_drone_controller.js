@@ -75,10 +75,19 @@ const setMode = (drone, body) => {
     });
 }
 
-const getAllMissions = (drone, body) => {
+const getAllMissions = (drone) => {
     return new Promise((resolve, reject) => {
         // console.log(wss);
         if (!wss.makeRequest(drone.id, 'GET', 'mission.missions', {}, (authenticated, code, body) => resolve(body.missions))) {
+            resolve({ status: 403, message: 'Drone not connected' });
+        }
+    });
+}
+
+const getVitals = (drone) => {
+    return new Promise((resolve, reject) => {
+        // console.log(wss);
+        if (!wss.makeRequest(drone.id, 'GET', 'vitals', {}, (authenticated, code, body) => resolve(body))) {
             resolve({ status: 403, message: 'Drone not connected' });
         }
     });
@@ -91,4 +100,5 @@ module.exports = {
     scheduleMission: scheduleMission,
     setMode: setMode,
     getAllMissions: getAllMissions,
+    getVitals: getVitals,
 }

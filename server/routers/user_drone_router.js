@@ -36,8 +36,24 @@ router.get('/:droneID/logs', (req, res) => {
 });
 
 router.get('/:droneID/missions', (req, res) => {
-    userDroneController.getAllMissions(req.drone, req.user).then((missions) => {
+    userDroneController.getAllMissions(req.drone).then((missions) => {
         res.status(200).json(missions);
+    }).catch((err) => {
+        res.status(500).json({ message: 'Error' });
+    });
+});
+
+router.get('/:droneID/vitals', (req, res) => {
+    userDroneController.getVitals(req.drone).then((vitals) => {
+        res.status(200).json(vitals);
+    }).catch((err) => {
+        res.status(500).json({ message: 'Error' });
+    });
+});
+
+router.get('/:droneID/last_location', (req, res) => {
+    userDroneController.getVitals(req.drone).then((vitals) => {
+        res.status(200).json(vitals);
     }).catch((err) => {
         res.status(500).json({ message: 'Error' });
     });
