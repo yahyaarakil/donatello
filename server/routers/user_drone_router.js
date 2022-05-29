@@ -52,8 +52,8 @@ router.get('/:droneID/vitals', (req, res) => {
 });
 
 router.get('/:droneID/last_location', (req, res) => {
-    userDroneController.getVitals(req.drone).then((vitals) => {
-        res.status(200).json(vitals);
+    userDroneController.getLastLocation(req.drone).then((location) => {
+        res.status(200).json(location);
     }).catch((err) => {
         res.status(500).json({ message: 'Error' });
     });

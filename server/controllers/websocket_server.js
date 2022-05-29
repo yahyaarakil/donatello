@@ -74,9 +74,6 @@ module.exports.serveDonatello = (WSS_PORT) => {
                     // if response, handle
                     else if (message instanceof messageFactory.Response) {
                         request = ws.requests[message.id.toString()];
-                        console.log(ws.requests)
-                        console.log(message.id)
-                        console.log(request)
                         request.cb(ws.authenticated, message.code, message.body);
                         delete ws.requests[message.id];
                     }

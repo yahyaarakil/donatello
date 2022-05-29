@@ -93,6 +93,12 @@ const getVitals = (drone) => {
     });
 }
 
+const getLastLocation = (drone) => {
+    return new Promise((resolve, reject) => {
+        resolve(drone.last_location);
+    });
+}
+
 module.exports = {
     getAllDrones: getAllDrones,
     getAllLogs: getAllLogs,
@@ -101,4 +107,5 @@ module.exports = {
     setMode: setMode,
     getAllMissions: getAllMissions,
     getVitals: getVitals,
+    getLastLocation: getLastLocation
 }

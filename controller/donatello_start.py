@@ -5,7 +5,7 @@ from missions import Mission, MissionManager
 from other_requests import Requests
 import logging, time, threading
 from states import *
-from config import GEN, MOV
+from config import GEN, MOV, ARDU
 import pickle, copy
 import numpy as np
 
@@ -38,6 +38,11 @@ class DDonatello(Donatello):
             'SOLAR': False,
         }
         super().__init__()
+
+        def post_location():
+            self.com.makeRequest(Request(Method.POST, 'post_location', { 'location': tuple(self.ardu.get_position()) }))
+        self.sch.schedule(post_location, ()).every(ARDU['LOCATION_POST_INTERVAL'])
+
         self._state = State.ASLEEP
         self._mission_state = MissionState.IDLE
         self.e = threading.Event()
@@ -174,7 +179,6 @@ if __name__ == "__main__":
     try:
         logging.basicConfig(level="DEBUG")
         donatello = DDonatello()
-
         # donatello.msn.run_mission(
         #     Mission(
         #         pattern=[

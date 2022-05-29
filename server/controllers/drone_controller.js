@@ -77,9 +77,17 @@ const postLog = (drone, log) => {
     });
 }
 
+const postLocation = (drone, location) => {
+    return new Promise((resolve, reject) => {
+        drone.last_location = location.location;
+        drone.save().then((droneRead) => resolve({ code: 200, body: {} })).catch((err) => resolve({ code: 500, body: {} }))
+    });
+}
+
 const droneRequests = {
     'post': {
-        'post_log': postLog
+        'post_log': postLog,
+        'post_location': postLocation
     },
     'get': {
 
