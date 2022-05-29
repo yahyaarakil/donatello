@@ -5,8 +5,8 @@ import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
 import { useRef, useState, useEffect } from 'react';
 import { EditControl } from "react-leaflet-draw"
 import {Navigate} from "react-router-dom";
-
-
+import DroneServices from "../services/DroneServices.js"
+import Select from "react-select";
 
 import "leaflet-draw/dist/leaflet.draw.css"
 
@@ -15,6 +15,8 @@ import "../styles/CreateMission.css"
 function Map({ setMyVar }) {
     const [editableFG, setEditableFG] = useState(null);
     // const [coordinate, setCoordinate] = useState([35.247051, 33.024617]);
+    
+    
 
     function getCorners(layer) {
         const corners = layer.getBounds();
@@ -88,20 +90,21 @@ function Map({ setMyVar }) {
     );
 }
 
-function Body({ myVar }) {
+
+
+function Body({ myVar, drones }) {
 
     const nameRef = useRef();
     const [name, setName] = useState("");
     
     const deviceRef = useRef();
     const [device, setDevice] = useState("");
-   
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(myVar)
-        axios.post("http://localhost:8080/drones/"+ device + "/missions/schedule" ,
+        console.log(device)
+        axios.post("http://localhost:8080/drones/"+ device.key + "/missions/schedule" ,
         {
             "pattern": myVar.pattern,
             "time": Date.now(),
@@ -110,11 +113,23 @@ function Body({ myVar }) {
         },
         {
             headers: { "content-type": "application/json", 
-                       "token": sessionStorage.getItem("token")}
+                       "token": JSON.parse(sessionStorage.getItem("token"))}
         })
         
 
     }
+
+    var dev1 = {
+        id: 1,
+        name : "dev1"
+    }
+
+    var dev2 = {
+        id: 2,
+        name: "dev2"
+    }
+
+    var options1 = [dev1, dev2]
 
     return (
         <div className="body-div">
@@ -140,15 +155,21 @@ function Body({ myVar }) {
                         />
                     </div>
                     <div>
-                        <select class="selectpicker" data-style="btn-info" name="selectpicker" value={device} onChange={(e) => setDevice(e.target.value)}>
-                            <optgroup label="Select Device">
-                                <option name="table1" value="1">Device 1</option>
-                                <option name="table2" value="2">Device 2</option>
-                            </optgroup>
-                        </select>
+                        <Select 
+                            value={device} 
+                            onChange={(e) => {setDevice(e)}}  
+                            options = {drones.data.map((option)=>{
+                                return{
+                                    label: option.name,
+                                    value: option.name,
+                                    key: option.id
+                                };
+                            })}  
+                                 
+                        />
                     </div>
                     <div>
-                        
+                            
                             <button>Create Mission</button>
                         
                     </div>
@@ -166,7 +187,25 @@ export const CreateMission = () => {
         left: 0,
         right: 0,
     });
+
+    const dronesRef = useRef();
+    const [drones, setDrones] = useState({})
     
+    const fetchdata = async () => {
+        DroneServices.getAllDrones(JSON.parse(sessionStorage.getItem("token"))).then(function (response) {
+            if (response.status === 200) {      
+                setDrones(response)
+            }
+        });
+    }
+    useEffect(() => {
+        fetchdata();
+    },[])
+   
+    if(drones.data === undefined) {
+        console.log("here")
+        return null
+    }
     return (
         <div>
             <LoginNavBar />
@@ -175,7 +214,7 @@ export const CreateMission = () => {
                     <Map setMyVar={setMyVar} />
                 </div>
                 <div className="sidebody">
-                    <Body myVar={myVar} />
+                    <Body myVar={myVar} drones={drones} />
                 </div>
             </div>
         </div>
