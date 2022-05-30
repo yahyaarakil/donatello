@@ -98,7 +98,7 @@ module.exports.serveDonatello = (WSS_PORT) => {
                 
                 ws.on('close', () => {
                     console.log('Connection closed by client');
-                    delete wss.drones[ws.id];
+                    delete wss.drones[ws.authenticated.id];
                     clearInterval(interval);
                 });
             });
