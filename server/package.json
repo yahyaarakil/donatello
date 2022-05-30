@@ -4,7 +4,8 @@
   "description": "METU NCC - Donatello Kaplumbaga Server",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --timeout 10000 --require mocha-suppress-logs --slow 0 --exit",
+    "test_controllers": "mocha test/test --timeout 10000 --require mocha-suppress-logs --slow 0 --exit",
+    "test_end": "mocha test/test_reqs --timeout 10000 --require mocha-suppress-logs --slow 0 --exit",
     "server": "node app.js",
     "nodemon": "nodemon app.js"
   },

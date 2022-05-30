@@ -2,7 +2,6 @@ require('dotenv').config();
 const expect = require('chai').expect;
 const assert = require('assert').strict;
 const mongoose = require('mongoose');
-// const app = require('../app');
 const userController = require('../controllers/user_controller');
 const droneController = require('../controllers/drone_controller');
 const userDroneController = require('../controllers/user_drone_controller');
@@ -24,8 +23,8 @@ const droneInput = {
 var drone;
 var droneServer;
 
-describe("Database", async function() {
-    it("Establishing conneciton", async function () {
+describe("Controllers", async function() {
+    it("Establishing database conneciton", async function () {
         try {
             await mongoose.connect(process.env.MONGODB_URL);
             assert(true);

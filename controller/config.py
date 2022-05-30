@@ -9,7 +9,7 @@ COMS = {
         'id': 10,
         'password': 'donatello2022',
         'name': 'donatello_mk_1',
-        'email': 'yahya.arakil@metu.edu.tr'
+        'email': 'yahyaarakil@gmail.com'
     }
 }
 ARDU = {
