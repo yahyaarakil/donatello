@@ -24,7 +24,7 @@ const registerDrone = (drone) => {
                             }).catch((err) => reject(err));
                         }).catch((err) => reject(err));
                     } else {
-                        reject(null);
+                        resolve(null);
                     }
                 }).catch((err) => reject(err));
             });
@@ -59,7 +59,7 @@ const authenticateDrone = (drone) => {
             } else {
                 // register for first time
                 registerDrone(Object.assign(drone)).then((droneRead) => {
-                    resolve(drone);
+                    resolve(droneRead);
                 }).catch((err) => reject(err));
             }
         }).catch((err) => reject(err));
