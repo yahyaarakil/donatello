@@ -32,6 +32,8 @@ process.on('SIGINT', () => {
 });
 
 app.listen(process.env.HTTPS_PORT, () => {
+    console.log(await mongoose.connect(process.env.MONGODB_URL));
+    console.log("here")
     console.log('🟡Starting Donatello Server');
     console.log('🟡Establishing connection to Database');
     mongoose.connect(process.env.MONGODB_URL).then(() => {
@@ -51,3 +53,5 @@ app.listen(process.env.HTTPS_PORT, () => {
         process.exit();
     });
 });
+
+module.exports = app;
