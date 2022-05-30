@@ -16,6 +16,9 @@ app.use('/drones', userDroneRouter);
 
 var wss = null;
 
+var inject_start = null;
+var inject_stop = null;
+
 process.on('SIGINT', () => {
     console.log('🟡Terminating Server');
     if (wss) {
@@ -27,6 +30,9 @@ process.on('SIGINT', () => {
     console.log('🟡Terminating connection to Database');
     mongoose.disconnect().then(() => {
         console.log('✅Server exitting gracefully');
+        if (inject_stop) {
+            inject_stop(true);
+        }
         process.exit();
     });
 });
@@ -42,6 +48,10 @@ app.listen(process.env.HTTPS_PORT, () => {
             console.log(`🟢Websocket Server started successfully on port ${process.env.WSS_PORT}`);
             wss = ws;
             console.log(`✅Server started successfully on port ${process.env.HTTPS_PORT}`);
+            
+            if (inject_start) {
+                inject_start(app);
+            }
         }).catch((err) => {
             // console.log(err);
         });
@@ -51,3 +61,16 @@ app.listen(process.env.HTTPS_PORT, () => {
         process.exit();
     });
 });
+
+module.exports.start = () => {
+    return new Promise((resolve, reject) => {
+        inject_start = resolve;
+    });
+}
+
+module.exports.stop = () => {
+    return new Promise((resolve, reject) => {
+        inject_stop = resolve;
+        process.emit('SIGINT');
+    });
+}

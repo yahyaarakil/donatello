@@ -4,19 +4,26 @@ const droneController = require('../controllers/drone_controller');
 
 // send/recieve functions
 const makeRequest = (droneId, method, path, body, cb) => {
-    ws = wssV.drones[droneId];
+    try {
+        ws = wssV.drones[droneId];
+        reqs = ws.requests;
+    } catch {
+        ws = null;
+        reqs = [];
+    }
+
+    do {
+        id = Math.floor(Math.random() * 4119);
+    } while (id in reqs);
+    request = new messageFactory.Request(id, method, path, body, cb);
+    msS = request.serializeMessage();
+
     if (!ws) {
         return false;
     }
-    do {
-        id = Math.floor(Math.random() * 4119);
-    } while (id in ws.requests);
-    request = new messageFactory.Request(id, method, path, body, cb);
     ws.requests[request.id] = request;
-
-    msS = request.serializeMessage();
     ws.send(msS);
-    return true;
+    return msS;
 }
 
 module.exports.makeRequest = makeRequest;
