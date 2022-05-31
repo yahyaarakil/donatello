@@ -1,9 +1,9 @@
 import axios from "axios";
 
-class DroneServices {
-    static async getAllDrones(token){
+class VitalServices {
+    static async getVital(token,droneId){
       
-        return await axios.get("http://localhost:8080/drones",
+        return await axios.get("http://localhost:8080/drones/" + droneId + "/vitals",
         {
           headers: {
             "content-type": "application/json",
@@ -14,4 +14,4 @@ class DroneServices {
     }
 }
 
-export default DroneServices;
+export default VitalServices;

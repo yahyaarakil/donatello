@@ -91,7 +91,6 @@ function Map({ setMyVar }) {
 }
 
 
-
 function Body({ myVar, drones }) {
 
     const nameRef = useRef();
@@ -100,13 +99,23 @@ function Body({ myVar, drones }) {
     const deviceRef = useRef();
     const [device, setDevice] = useState("");
 
+    const [success, setSuccess] = useState("");
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(myVar)
         console.log(device)
+        var pattern = [];
+        for(var i = 0; i < myVar.pattern.length; i++){
+            var tempPattern = [];
+            tempPattern.push(myVar.pattern[i].lat);
+            tempPattern.push(myVar.pattern[i].lng);
+            pattern.push(tempPattern)
+        }
+        console.log(pattern)
         axios.post("http://localhost:8080/drones/"+ device.key + "/missions/schedule" ,
         {
-            "pattern": myVar.pattern,
+            "pattern": pattern,
             "time": Date.now(),
             "name": name
 
@@ -114,6 +123,11 @@ function Body({ myVar, drones }) {
         {
             headers: { "content-type": "application/json", 
                        "token": JSON.parse(sessionStorage.getItem("token"))}
+        }).then(function(response) {
+            if(response.data.message === "Success"){
+                console.log("Success1")
+                setSuccess(true)
+            }
         })
         
 
@@ -133,7 +147,12 @@ function Body({ myVar, drones }) {
 
     return (
         <div className="body-div">
-            <ul className="mission">
+            {success ? (    
+                    <div> <p> Mission Created Successfully  </p>  </div>
+                    
+
+            ) : (
+                <ul className="mission">
                 <div>
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -176,6 +195,8 @@ function Body({ myVar, drones }) {
                 </form>
                 </div>
             </ul>
+                ) }
+            
         </div>
     )
 }
