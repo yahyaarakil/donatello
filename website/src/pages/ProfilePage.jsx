@@ -2,9 +2,13 @@ import React from 'react';
 import axios from 'axios';
 import LoginNavBar from './LoginNavBar';
 import { Container,Row,Col,Form ,Button} from 'react-bootstrap';
+import splinter from '../images/splinter.jpg'
 
 import { useRef, useState, useEffect } from 'react';
 import "../styles/ProfilePage.css"
+
+
+
 export const ProfilePage = () => {
 
     return (
@@ -24,7 +28,19 @@ export const ProfilePage = () => {
     )
 }
 
+
+
 function RightBody() {
+    const [name, setName] = useState("Master");
+    const [surname, setSurname] = useState("Splinter");
+    const [mail, setMail] = useState("msplinter@metu.edu.tr");
+    
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(e.target.value)
+
+    }
 
     return (
         <>
@@ -34,29 +50,35 @@ function RightBody() {
                     <div style={{marginTop: 0}}>
                         <h1 style={{marginTop: 0}}>User Profile</h1>
                     </div>
-                    <Form className="profileform" style={{display: 'flex',  justifyContent:'right', alignItems:'center'}}>     
+                    <Form className="profileform" style={{display: 'flex',  justifyContent:'right', alignItems:'center'}} onSubmit={handleSubmit}>     
                     <div className='profileformDiv'>
                         <Form.Group controlId="formCategory1">
                                 <Form.Label style={{display: 'flex',  justifyContent:'left'}}>Name</Form.Label>
                                 <div className='profileFormDivLittle'>
-                                    <Form.Control type="text" defaultValue="Mustafa" style={{width: 275}}/>
+                                    <Form.Control type="text" defaultValue={name} style={{width: 275}}/>
                                 </div>
                                 
                         </Form.Group>
                         <Form.Group controlId="formCategory1">
                                 <Form.Label>Surname</Form.Label>
                                 <div className='profileFormDivLittle'>
-                                    <Form.Control type="text" defaultValue="Aygün" style={{width: 275}}/>
+                                    <Form.Control type="text" defaultValue={surname} style={{width: 275}}/>
                                 </div>
                                 
                         </Form.Group>
                         <Form.Group controlId="formCategory1">
                                 <Form.Label>Email</Form.Label>
                                 <div className='profileFormDivLittle'>
-                                    <Form.Control type="text" defaultValue="aygun.mustafa@metu.edu.tr" style={{width: 275}}/>
+                                    <Form.Control type="text" onChange = {(e) => setMail(e.target.value)} value = {mail} style={{width: 275}}/>
                                 </div>
                                 
                         </Form.Group>
+                        
+                                
+                                <button type ="submit" onSubmit={handleSubmit}>Save Changes </button>
+                                
+                                
+                        
                     </div>
                         
                     </Form>
@@ -83,7 +105,7 @@ function LeftBody() {
             <div className='leftbody'>
             <div>
                 <div className='image' style={{display: 'flex',  justifyContent:'left'}}>
-                    <img className="profile-pic" src="https://i.pinimg.com/originals/22/94/0c/22940c5d7d3e464f4bff0112c401888a.jpg" alt= "profil pic" id="output" width="400" />
+                    <img className="profile-pic" src={splinter} alt= "profil pic" id="output" width="400" />
                 </div>
 
                 <div style={{display: 'flex',  justifyContent:'left'}}>

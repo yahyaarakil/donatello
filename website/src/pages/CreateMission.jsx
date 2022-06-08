@@ -4,6 +4,9 @@ import LoginNavBar from './LoginNavBar';
 import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
 import { useRef, useState, useEffect } from 'react';
 import { EditControl } from "react-leaflet-draw"
+import {Navigate} from "react-router-dom";
+import DroneServices from "../services/DroneServices.js"
+import Select from "react-select";
 
 import "leaflet-draw/dist/leaflet.draw.css"
 
@@ -12,6 +15,8 @@ import "../styles/CreateMission.css"
 function Map({ setMyVar }) {
     const [editableFG, setEditableFG] = useState(null);
     // const [coordinate, setCoordinate] = useState([35.247051, 33.024617]);
+    
+    
 
     function getCorners(layer) {
         const corners = layer.getBounds();
@@ -31,12 +36,18 @@ function Map({ setMyVar }) {
             layer = e.layer;
         if (type === 'rectangle') {
             layer.on('mouseover', function () {
-                var temp = getCorners(layer);
-                console.log(temp)
-                temp.top = temp[0].lat;
-                temp.bottom = temp[2].lat;
-                temp.left = temp[0].lng;
-                temp.right = temp[2].lng;
+                var temp = {
+                    pattern: []
+
+                };
+            
+                temp.pattern = getCorners(layer);
+                
+                temp.top = temp.pattern[0].lat;
+                temp.bottom = temp.pattern[2].lat;
+                temp.left = temp.pattern[0].lng;
+                temp.right = temp.pattern[2].lng;
+
                 console.log(temp)
                 setMyVar(temp);
 
@@ -50,10 +61,13 @@ function Map({ setMyVar }) {
         // store the ref for future access to content
         setEditableFG(reactFGref);
     };
+    
 
     return (
-        <MapContainer center={[35.247051, 33.024617]} zoom={12}>
+        <MapContainer center={[35.247051, 33.024617]} zoom={16}>
             <TileLayer
+                minZoom={15}
+                maxZoom={18}
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
             />
@@ -71,16 +85,76 @@ function Map({ setMyVar }) {
                     }}
                     onCreated={onCreated} />
             </FeatureGroup>
-            )
+            
         </MapContainer>
     );
 }
 
-function Body({ myVar }) {
+
+function Body({ myVar, drones }) {
+
+    const nameRef = useRef();
+    const [name, setName] = useState("");
+    
+    const deviceRef = useRef();
+    const [device, setDevice] = useState("");
+
+    const [success, setSuccess] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(myVar)
+        console.log(device)
+        var pattern = [];
+        for(var i = 0; i < myVar.pattern.length; i++){
+            var tempPattern = [];
+            tempPattern.push(myVar.pattern[i].lat);
+            tempPattern.push(myVar.pattern[i].lng);
+            pattern.push(tempPattern)
+        }
+        console.log(pattern)
+        axios.post("http://localhost:8080/drones/"+ device.key + "/missions/schedule" ,
+        {
+            "pattern": pattern,
+            "time": Date.now(),
+            "name": name
+
+        },
+        {
+            headers: { "content-type": "application/json", 
+                       "token": JSON.parse(sessionStorage.getItem("token"))}
+        }).then(function(response) {
+            if(response.data.message === "Success"){
+                console.log("Success1")
+                setSuccess(true)
+            }
+        })
+        
+
+    }
+
+    var dev1 = {
+        id: 1,
+        name : "dev1"
+    }
+
+    var dev2 = {
+        id: 2,
+        name: "dev2"
+    }
+
+    var options1 = [dev1, dev2]
+
     return (
         <div className="body-div">
-            <ul className="mission">
+            {success ? (    
+                    <div> <p> Mission Created Successfully  </p>  </div>
+                    
+
+            ) : (
+                <ul className="mission">
                 <div>
+                <form onSubmit={handleSubmit}>
                     <div>
                         <p>top: {myVar.top}</p>
                         <p>bottom: {myVar.bottom}</p>
@@ -91,25 +165,38 @@ function Body({ myVar }) {
                         <input
                             type="text"
                             id='missionName'
+                            ref={nameRef}
                             autoComplete="off"
+                            onChange={(e) => setName(e.target.value)}
+                            value={name}
                             required
                             placeholder="Mission Name"
                         />
                     </div>
                     <div>
-                        <select class="selectpicker" data-style="btn-info" name="selectpicker">
-                            <optgroup label="Select Device">
-                                <option name="table1" value="1">Device 1</option>
-                                <option name="table2" value="2">Device 2</option>
-                            </optgroup>
-                        </select>
+                        <Select 
+                            value={device} 
+                            onChange={(e) => {setDevice(e)}}  
+                            options = {drones.data.map((option)=>{
+                                return{
+                                    label: option.name,
+                                    value: option.name,
+                                    key: option.id
+                                };
+                            })}  
+                                 
+                        />
                     </div>
                     <div>
-                        <button>Clean Area</button>
+                            
+                            <button>Create Mission</button>
+                        
                     </div>
-
+                </form>
                 </div>
             </ul>
+                ) }
+            
         </div>
     )
 }
@@ -121,7 +208,25 @@ export const CreateMission = () => {
         left: 0,
         right: 0,
     });
+
+    const dronesRef = useRef();
+    const [drones, setDrones] = useState({})
     
+    const fetchdata = async () => {
+        DroneServices.getAllDrones(JSON.parse(sessionStorage.getItem("token"))).then(function (response) {
+            if (response.status === 200) {      
+                setDrones(response)
+            }
+        });
+    }
+    useEffect(() => {
+        fetchdata();
+    },[])
+   
+    if(drones.data === undefined) {
+        console.log("here")
+        return null
+    }
     return (
         <div>
             <LoginNavBar />
@@ -130,7 +235,7 @@ export const CreateMission = () => {
                     <Map setMyVar={setMyVar} />
                 </div>
                 <div className="sidebody">
-                    <Body myVar={myVar} />
+                    <Body myVar={myVar} drones={drones} />
                 </div>
             </div>
         </div>
