@@ -79,7 +79,7 @@ export const EditMission = () => {
                                 <div className='row'>
                                     <div className='col-6 page-hero d-flex align-items-center justify-content-center'>
                                         <select className="form-select" onClick={e => setVisible(!e.target.value)} onChange={e => setDevice(e.target.value)}>
-                                            <option key={-1}>select</option>
+                                            <option key={-1} disabled={true}>select</option>
                                             {DEVICES.map((missionOptions) => <option key={missionOptions.id} value={missionOptions.id}>{missionOptions.name}</option>)}
                                         </select>
                                     </div>
