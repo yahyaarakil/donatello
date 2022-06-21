@@ -10,29 +10,51 @@ import LoginNavBar from './LoginNavBar';
 import DroneServices from "../services/DroneServices.js"
 import VitalServices from "../services/VitalServices.js"
 
+var vital_list = [{
+ 
+}]
+
+var count = 0
+
 export const UserMainPage = () => {
-
-    
-
-     
 
     const dronesRef = useRef();
     const [isDrones, setIsDrones] = useState(true)
     const [drones, setDrones] = useState({})
 
-    const [vitals, setVitals] = useState({})
     const [isVitals, setIsVitals] = useState(true)
-    
+    //The drone 10 is used as test purpose directly instead of getting all drones.
     const fetchdata = async () => {
-      //const response = await VitalServices.getVital(JSON.parse(sessionStorage.getItem("token")),10)
-        //DroneServices.getAllDrones(JSON.parse(sessionStorage.getItem("token"))).then(function (response) 
         VitalServices.getVital(JSON.parse(sessionStorage.getItem("token")),10).then(function(response){
             if (response.status === 200) { 
-              console.log(response)
-              setVitals(response.data)
-              setIsVitals(false)
-                
+              console.log(response) 
+              if(response.data.status === 403){
+                VitalServices.getLastLocation(JSON.parse(sessionStorage.getItem("token")),10).then(function(responseLastLocation){
+                  if (responseLastLocation.status === 200) { 
+                    console.log(responseLastLocation.data)
+                        vital_list[count].position1 = responseLastLocation.data[0]
+                        vital_list[count].position2 = responseLastLocation.data[1]
+                        vital_list[count].state = "Not connected"
+                        vital_list[count].battery_percentage = 0
+                        vital_list[count].battery_voltage = 0   
+                        count = count + 1
+                        setIsVitals(false)   
+                    }  
+                  }
+                );      
+              }
+              else{
+                vital_list[count].position1 = response.data.position[0]
+                vital_list[count].position2 = response.data.position[1]
+                vital_list[count].battery_percentage = response.data.battery_percentage
+                vital_list[count].battery_voltage = response.data.battery_voltage
+                vital_list[count].state = response.data.state
+                count = count + 1
+                setIsVitals(false)
+              }  
+              
             }
+
         });
     }
     useEffect(() => {
@@ -46,35 +68,12 @@ export const UserMainPage = () => {
         return null
     }
 
-// for(var i = 0; i < drones.data.length; i++){
-//   const response = VitalServices.getVital(JSON.parse(sessionStorage.getItem("token")),drones.data[i].id)
-//   vitals.push(response)
-//   // VitalServices.getVital(JSON.parse(sessionStorage.getItem("token")),drones.data[i].id).then(function (response) {
-//   //     if (response.status === 200) {  
-//   //        vitals.push(response.data);
-         
-//   //     }
-//   //   });
-//   // }
-//   if(i === drones.data.length -1 ){
-//     setIsVitals(false)
-//   }
-    
-// }
-
-// if(isVitals){
-//   <div>
-//     <p>"Loading"</p>
-//   </div>
-//   return null
-// }
-
     return (
         <>
             <LoginNavBar />
             <div class="wrapper">
                 <div class="main">
-                    <Map vitals={vitals}/>
+                    <Map/>
                 </div>
                 <div class="sidebar">
                     <Body />
@@ -122,12 +121,11 @@ const marker = new L.icon({ iconUrl: donatelloLogo, iconSize: [48, 26] });
 function DonatReisICerik(vitals) {
 
   console.log(vitals)
-//{vitals.position[0]} {vitals.position[1]}
   return (
     <>
       <ul>
         <li>
-          current coordinates: {vitals.props.position[0]} {vitals.props.position[1]}
+          current coordinates: {vitals.props.position1} {vitals.props.position2}
         </li>
         <li>
           state: {vitals.props.state}
@@ -139,21 +137,13 @@ function DonatReisICerik(vitals) {
           Battery Voltage: {vitals.props.battery_voltage}
         </li>
       </ul>
-    </>
+   </>
   );
 }
 
-function Map(vitals) {
-
-
-
-    var vitalsArray = []
-    
-    console.log(vitals)
-    if(vitals.vitals.message !== "Drone not connected"){
-      vitalsArray.push(vitals.vitals)
-    }
-    console.log(vitalsArray)
+function Map() {
+    console.log(vital_list[0])
+    console.log(vital_list[0].position1)
 
     return (
       <MapContainer center={[35.247051, 33.024617]} zoom={12}>
@@ -171,9 +161,9 @@ function Map(vitals) {
             <Circle center={[51.51, -0.06]} radius={200} />
           </FeatureGroup>
           
-      {vitalsArray.map((vital, idx) => <Marker
+      {vital_list.map((vital, idx) => <Marker
         
-        position={[vital.position[0], vital.position[1]]}
+        position={[vital.position1, vital.position2]}
         icon={marker}
         key={idx}
       >
