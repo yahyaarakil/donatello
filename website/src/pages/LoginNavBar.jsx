@@ -16,7 +16,7 @@ export default function LoginNavBar() {
                 <li><a href="settings"><FontAwesomeIcon icon={faGear}/> <b>Settings</b></a></li>
                 <li><a href="profile"><FontAwesomeIcon icon={faUser}/> <b>Profile</b></a></li>
                 <li><a href="notifications"><FontAwesomeIcon icon={faBell}/> <b>Notifications</b></a></li>
-                <li><a href="mainpage"><FontAwesomeIcon icon={faHouse}/> <b>Home</b></a></li>
+                <li><a href="dashboard"><FontAwesomeIcon icon={faHouse}/> <b>Home</b></a></li>
                 
 
             </ul>

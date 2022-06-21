@@ -12,6 +12,18 @@ class VitalServices {
         }
       );
     }
+
+    static async getLastLocation(token,droneId){
+      
+      return await axios.get("http://localhost:8080/drones/" + droneId + "/last_location",
+      {
+        headers: {
+          "content-type": "application/json",
+          "token": token
+        },
+      }
+    );
+  }
 }
 
 export default VitalServices;

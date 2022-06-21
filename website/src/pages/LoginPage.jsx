@@ -71,7 +71,7 @@ export const LoginPage = () => {
             <div className='login-page-body'>
                 {/* if logged in */}
                 {success ? (
-                    <Navigate to="/MainPage"/>
+                    <Navigate to="/dashboard"/>
 
                 ) //else
                     : (
