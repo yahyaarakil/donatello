@@ -71,11 +71,11 @@ export const UserMainPage = () => {
     return (
         <>
             <LoginNavBar />
-            <div class="wrapper">
-                <div class="main">
+            <div className="wrapper">
+                <div className="main">
                     <Map/>
                 </div>
-                <div class="sidebar">
+                <div className="sidebar">
                     <Body />
                 </div>
             </div>
