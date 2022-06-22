@@ -3,11 +3,8 @@ import "../styles/UserMainPage.css";
 import donatelloLogo from "../images/donatello-logo.png";
 import { MapContainer, TileLayer, FeatureGroup, Popup, Marker, Circle } from 'react-leaflet';
 import L from "leaflet";
-import donatReisler from "../data/DonatReisler.json"
-import { EditControl } from "react-leaflet-draw"
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import LoginNavBar from './LoginNavBar';
-import DroneServices from "../services/DroneServices.js"
 import VitalServices from "../services/VitalServices.js"
 
 var vital_list = [{
@@ -17,10 +14,6 @@ var vital_list = [{
 var count = 0
 
 export const UserMainPage = () => {
-
-  const dronesRef = useRef();
-  const [isDrones, setIsDrones] = useState(true)
-  const [drones, setDrones] = useState({})
 
   const [isVitals, setIsVitals] = useState(true)
   //The drone 10 is used as test purpose directly instead of getting all drones.
