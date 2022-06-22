@@ -1,83 +1,140 @@
 import React from 'react';
 import LoginNavBar from './LoginNavBar';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { useState, useEffect } from 'react';
+import DroneServices from "../services/DroneServices.js"
+import "leaflet-draw/dist/leaflet.draw.css"
+import "../styles/CreateMission.css"
+import Select from "react-select";
 
-import { useState } from 'react';
+
+let MISSIONS = [
+    {
+        "path": [
+            [35.246569482417755, 33.028105704264],
+            [35.24684765535991, 33.02847608414646],
+            [35.24646955439687, 33.02883984759016],
+            [35.24625619987274, 33.028310735028036]
+        ],
+        "name": "test mission",
+        "time": 12312312312
+    }
+]
 
 export const ReviewMission = () => {
 
-    const MISSIONS = [{ id: 1, name: "first", coordinates: [{ lat: 123, lon: 123 }, { lat: 123, lon: 123 }] },
-    { id: 2, name: "second", coordinates: [{ lat: 123, lon: 123 }, { lat: 123, lon: 123 }] },
-    { id: 3, name: "third", coordinates: [{ lat: 123, lon: 123 }, { lat: 123, lon: 123 }] }];
-
-    //const [MISSIONS, setMissions] = useState([]);
-    const [mission, setMission] = useState("");
+    const [drones, setDrones] = useState({})
     const [visible = false, setVisible] = useState("");
+    const [device, setDevice] = useState("");
+    const [selectedMission, setSelectedMission] = useState("");
+    const [visibleMarkers = false, setVisibleMarkers] = useState("");
 
+    function MultipleMarkers() {
+        return selectedMission.value.map((coordinata, index) => {
+            return <Marker key={index} position={coordinata}></Marker>;
+        });
+    }
 
-    function onShowButtonClick() {
-        setVisible(true);
+    function Map(props) {
+        if (props.visible) {
+            return (
+                <MapContainer center={selectedMission.value[0]} zoom={16} style={{ marginTop: "20px" }} >
+                    <TileLayer
+                        minZoom={15}
+                        maxZoom={19}
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="http://osm.org/copyright%22%3EOpenStreetMap</a> contributors'
+                    />
+                    <MultipleMarkers />
+                </MapContainer>
+            )
+        }
+        return (
+            <></>
+        );
     }
 
 
-    function ShowMission(props) {
-        if (props.visible) {
-            let _mission = MISSIONS.find(({ id }) => id === props.selectedMission)
+    const handleSubmit = async (e) => {
+        console.log(device)
+        setVisible(true)
+    }
 
+    const handleShow = async (e) => {
+        console.log(selectedMission);
+        setVisibleMarkers(true);
+
+    }
+
+    const fetchdata = async () => {
+        DroneServices.getAllDrones(JSON.parse(sessionStorage.getItem("token"))).then(function (response) {
+            if (response.status === 200) {
+                setDrones(response)
+            }
+        });
+    }
+    useEffect(() => {
+        fetchdata();
+    }, [])
+
+    function MissionsForm(props) {
+
+        if (props.isVisible) {
             return (
-                <div className="card " style={{ marginBottom: "20px", "height": "200px" }}>
-                    <div className="card-body">
-                        <div className="mb-5">
-                            <div className='row'>
-                                <div className='col-6 d-flex flex-column'>
-                                    <label htmlFor="missionName">Mission Name:</label>
-                                    <input id="missionName" type="text" disabled={true} value={_mission.id}></input>
-                                    <label htmlFor="Name">Name:</label>
-                                    <input id="Name" type="text" disabled={true} value={_mission.name}></input>
-                                </div>
-                            </div>
+                <div className="body-div mt-3">
+                    <div className='card'>
+                        <div className='card-body'>
+                            <Select
+                                value={selectedMission}
+                                onChange={(e) => { setSelectedMission(e) }}
+                                options={MISSIONS.map((option) => {
+                                    return {
+                                        label: option.name,
+                                        value: option.path,
+                                        key: option.time
+                                    };
+                                })}
+                            />
+                            <button onClick={handleShow}>Show</button>
                         </div>
                     </div>
                 </div>
             )
         }
-        return (<></>);
+        return (<></>)
     }
 
+    if (drones.data === undefined) {
+        return null
+    }
     return (
         <>
             <LoginNavBar />
-            <div className='container mt-5'>
+            <div className='container'>
                 <div className='row'>
                     <div className='col-6'>
-                        <div className="card " style={{ marginBottom: "20px", "height": "200px" }}>
-                            <div className="card-body">
-                                <div className="mb-5">
-                                    <div className='row'>
-                                        <div className='col-6 page-hero d-flex align-items-center justify-content-center'>
-                                            <select className="form-select" onClick={e => setVisible(false)} onChange={e => setMission(e.target.value)}>
-                                                <option key={-1} disabled={true}>select</option>
-                                                {MISSIONS.map((missionOptions) => <option key={missionOptions.id} value={missionOptions.id}>{missionOptions.name}</option>)}
-                                            </select>
-                                        </div>
-                                        <div className='col-6 page-hero d-flex align-items-center justify-content-center'>
-                                            <button onClick={onShowButtonClick}>Show</button>
-                                        </div>
-                                    </div>
+                        <Map visible={visibleMarkers} />
+                    </div>
+                    <div className='col-6'>
+                        <div className="body-div mt-3">
+                            <div className='card'>
+                                <div className='card-body'>
+                                    <select className="form-select" onClick={e => { setVisible(!e.target.value); setVisibleMarkers(!e.target.value) }} onChange={e => setDevice(e.target.value)}>
+                                        {/* hacky */}
+                                        <option key={-1} disabled={true} value={drones.data[0].id}>select</option>
+                                        {drones.data.map((missionOptions) => <option key={missionOptions.id} value={missionOptions.id}>{missionOptions.name}</option>)}
+                                    </select>
+                                    <button onClick={handleSubmit}>Get Previous Missions</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className='col-6'>
-                        <ShowMission visible={visible} selectedMission={Number(mission)} />
+                        <MissionsForm isVisible={visible} />
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                     </div>
                 </div>
             </div>
         </>
     );
-};
+}
 
 export default ReviewMission;
-
-
-//rtl 4 numara
-// 6 numara edit misison
