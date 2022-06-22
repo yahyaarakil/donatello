@@ -13,7 +13,7 @@ COMS = {
     }
 }
 ARDU = {
-    'ARDUPILOT_ADDRESS': 'tcp:localhost:5555',
+    'ARDUPILOT_ADDRESS': 'tcp:localhost:5762',
     'HOME_COORDINATE': (35.24652248477128, 33.02829064983303, 50),
     'LOCATION_POST_INTERVAL': 15
 }

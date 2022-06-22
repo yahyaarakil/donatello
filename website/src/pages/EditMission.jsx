@@ -1,25 +1,50 @@
 import React from 'react';
-import axios from 'axios';
 import LoginNavBar from './LoginNavBar';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { useState } from 'react';
+import VitalServices from "../services/VitalServices.js"
+import DroneServices from "../services/DroneServices.js"
+import { useState, useEffect } from 'react';
 
 import "leaflet-draw/dist/leaflet.draw.css"
 import "../styles/CreateMission.css"
+let ALL_DEVICES = [];
+let DEVICES = [];
 
 export const EditMission = () => {
-    const DEVICES = [{ id: 1, name: "donatello-1" }, { id: 2, name: "donatello-2" }, { id: 3, name: "donatello-3" }];
+
     const [device, setDevice] = useState("");
     const [visible = false, setVisible] = useState("");
+    const [isVitals, setIsVitals] = useState(true)
 
+    const fetchdata = async () => {
+        ALL_DEVICES = await VitalServices.getAllVitals(JSON.parse(sessionStorage.getItem("token")));
+
+        for (let i = 0; i < ALL_DEVICES.vitals.length; i++) {
+            if (ALL_DEVICES.vitals[i].vitals.data.status !== 403) {
+                DEVICES.push(ALL_DEVICES.vitals[i])
+            }
+        }
+        setIsVitals(false);
+    }
+    useEffect(() => {
+        fetchdata();
+    }, [])
+
+    if (isVitals) {
+        <div>
+            <p>"Loading"</p>
+        </div>
+        return null
+    }
 
     function onShowButtonClick() {
-        console.log("adasdsad")
         setVisible(true);
     }
 
-    function onMANUALButtonClick() {
+    function onMANUALButtonClick(selected) {
         console.log("manual")
+        console.log(selected.id)
+        DroneServices.postMode(selected.id,"manual")
     }
 
     function onRTLButtonClick() {
@@ -27,8 +52,14 @@ export const EditMission = () => {
     }
 
     function ShowMission(props) {
-        let device = DEVICES.find(({ id }) => id === props.selectedDevice)
-        console.log(props)
+        
+        let selected;
+        for (let i = 0; i < DEVICES.length; i++) {
+            if(DEVICES[i].id === props.selectedDevice){
+                selected = DEVICES[i];
+            }
+        }   
+
         if (props.visible) {
             return (
                 <div className="card mt-5">
@@ -36,13 +67,13 @@ export const EditMission = () => {
                         <div className='row'>
                             <div className='col-6 d-flex flex-column'>
                                 <label htmlFor="missionName">Mission Name:</label>
-                                <input id="missionName" type="text" disabled={true} value={device.name}></input>
+                                <input id="missionName" type="text" disabled={true} value={device}></input>
                                 <label htmlFor="Name">Name:</label>
-                                <input id="Name" type="text" disabled={true} value={device.name}></input>
+                                <input id="Name" type="text" disabled={true} value={device}></input>
                             </div>
                             <div className='col-6 d-flex flex-column'>
-                            <button onClick={onRTLButtonClick}>RTL</button>
-                            <button onClick={onMANUALButtonClick}>MANUAL</button>
+                                <button onClick={onRTLButtonClick}>RTL</button>
+                                <button onClick={onMANUALButtonClick(selected)}>MANUAL</button>
                             </div>
                         </div>
                     </div>
@@ -57,8 +88,6 @@ export const EditMission = () => {
             <LoginNavBar />
             <div className='container'>
                 <div className='row'>
-
-
                     <div className='col-6'>
                         <div className="map" style={{ width: "100%" }}>
                             <MapContainer center={[35.247051, 33.024617]} zoom={12}>
@@ -79,8 +108,9 @@ export const EditMission = () => {
                                 <div className='row'>
                                     <div className='col-6 page-hero d-flex align-items-center justify-content-center'>
                                         <select className="form-select" onClick={e => setVisible(!e.target.value)} onChange={e => setDevice(e.target.value)}>
-                                            <option key={-1} disabled={true}>select</option>
-                                            {DEVICES.map((missionOptions) => <option key={missionOptions.id} value={missionOptions.id}>{missionOptions.name}</option>)}
+                                            {/* hacky */}
+                                            <option key={-1} value={DEVICES[0].id}>select</option>
+                                            {DEVICES.map((missionOptions) =><option key={missionOptions.id} value={missionOptions.id}>{missionOptions.id}</option>)}
                                         </select>
                                     </div>
                                     <div className='col-6 page-hero d-flex align-items-center justify-content-center'>

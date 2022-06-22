@@ -34,7 +34,7 @@ class VitalServices {
   return { status: 200, vitals: vitals };
 }
 
-    static async getLastLocation(token,droneId){
+  static async getLastLocation(token,droneId){
       
       return await axios.get("http://localhost:8080/drones/" + droneId + "/last_location",
       {
