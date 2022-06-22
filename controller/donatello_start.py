@@ -131,6 +131,9 @@ class DDonatello(Donatello):
 
     def _mission_update(self):
         self._mission_update_dict[self.mission_state]()
+        while self.ardu.get_battery_percentage() < 30:
+            self.msn.end_current_mission()
+
 
     def _idle_update(self):
         if len(self.msn.current_mission.path) > 0:
@@ -169,7 +172,7 @@ class DDonatello(Donatello):
         frame_time = time.time() - start_time
 
         self._refresh_counter += 1
-        if self._refresh_counter > 5:
+        if self._refresh_counter > 500:
             self.logger.info(f'Refresh Rate: {1.0 / (frame_time)} Hz') # FPS = 1 / time to process loop
             self.logger.info(f'Battery: {self.ardu.get_battery_percentage()}%') # FPS = 1 / time to process loop
             self._refresh_counter = 0
