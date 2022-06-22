@@ -2,6 +2,7 @@ import copy, pickle
 from .mission import Mission
 from states import *
 import logging
+from .grid_mission import GridMission
 
 logger = logging.getLogger('MISSIONS')
 
@@ -32,7 +33,8 @@ class MissionManager:
         res.status(200).text('test')
 
     def schedule_new_mission(self, req, res):
-        mission = Mission(req.body['pattern'], req.body['name'], req.body['time'])
+        path = GridMission(req.body['pattern'], (0, 0), "vertical", 5).getGrid()
+        mission = Mission(path, req.body['name'], req.body['time'])
         self.donatello.sch.schedule(self.start_scheduled_mission, (mission,)).once(req.body['time'])
         self.missions.append(mission)
         with open('missions.missions', 'wb') as f:

@@ -36,6 +36,7 @@ class DDonatello(Donatello):
             'STUCK': False,
             'COLLIDED': False,
             'SOLAR': False,
+            'CHARGING': False
         }
         super().__init__()
 
@@ -52,6 +53,7 @@ class DDonatello(Donatello):
         self._update_dict = {
             State.ASLEEP: self._sleep_update,
             State.IN_MISSION: self._mission_update,
+            State.CHARGING: self._charging_update,
             State.RTL: self._rtl_update,
         }
         self._mission_update_dict = {
@@ -131,9 +133,17 @@ class DDonatello(Donatello):
 
     def _mission_update(self):
         self._mission_update_dict[self.mission_state]()
-        while self.ardu.get_battery_percentage() < 30:
-            self.msn.end_current_mission()
+        if self.ardu.get_battery_percentage() < 30:
+            self.target = self.ardu.home
+            self.state = State.RTL
+            self.ardu.return_to_launch()
+            self.flags['CHARGING'] = True
 
+    def _charging_update(self):
+        while self.ardu.get_battery_percentage() < 99:
+            time.sleep(60)
+        self.state = State.IN_MISSION
+        self.flags['CHARGING'] = False
 
     def _idle_update(self):
         if len(self.msn.current_mission.path) > 0:
@@ -160,7 +170,10 @@ class DDonatello(Donatello):
     def _rtl_update(self):
         # calc distance
         if self.wait_to_reach_target():
-            self.state = State.ASLEEP
+            if self.flags['CHARGING']:
+                self.state = State.CHARGING
+            else:
+                self.state = State.ASLEEP
 
     def update(self):
         start_time = time.time()

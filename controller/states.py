@@ -5,6 +5,7 @@ class State(Enum):
     ASLEEP = 'ASLEEP'
     IN_MISSION = 'IN_MISSION'
     RTL = 'RTL'
+    CHARGING = 'CHARGING'
 
 class MissionState(Enum):
     IDLE = 'IDLE'
