@@ -30,6 +30,10 @@ class Ardu:
         if self.connection.wait_heartbeat(timeout=5):
             self.connected_p()
 
+            # request messages
+            self.request_message_interval(mavutil.mavlink.MAVLINK_MSG_ID_SYS_STATUS, 1)
+            self.request_message_interval(mavutil.mavlink.MAVLINK_MSG_ID_GPS_RAW_INT, 1)
+
     def connected_p(self):
         self.connected = True
         self.donatello.flags['CRITICAL'] -= 1
@@ -179,16 +183,19 @@ class Ardu:
 
     # lat long lat
     def get_position(self):
-        gps = self.connection.recv_match(type='GPS_RAW_INT', blocking=True)
+        gps = self.connection.recv_match(type='GPS_RAW_INT')
+        gps = self.connection.messages['GPS_RAW_INT']
         gps = np.array((gps.lat, gps.lon, gps.alt))
-        return gps / 10000000
+        return gps / 10_000_000
 
     def get_battery_percentage(self):
-        msg = self.connection.recv_match(type='SYS_STATUS', blocking=True)
+        msg = self.connection.recv_match(type='SYS_STATUS')
+        msg = self.connection.messages['SYS_STATUS']
         return msg.battery_remaining
 
     def get_battery_voltage(self):
-        msg = self.connection.recv_match(type='SYS_STATUS', blocking=True)
+        msg = self.connection.recv_match(type='SYS_STATUS')
+        msg = self.connection.messages['SYS_STATUS']
         return msg.voltage_battery
 
     def _mavset(self, name, value, parm_type=None, retries=3):
@@ -220,3 +227,13 @@ class Ardu:
                 logger.info('Parameter set')
             else:
                 logger.error('Could not set parameter')
+
+    def request_message_interval(self, message_id, frequency_hz):
+        self.connection.mav.command_long_send(
+            self.connection.target_system, self.connection.target_component,
+            mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL, 0,
+            message_id, # The MAVLink message ID
+            1e6 / frequency_hz, # The interval between two messages in microseconds. Set to -1 to disable and 0 to request default rate.
+            0, 0, 0, 0, # Unused parameters
+            0, # Target address of message stream (if message has target address fields). 0: Flight-stack default (recommended), 1: address of requestor, 2: broadcast.
+        )

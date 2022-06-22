@@ -61,13 +61,16 @@ class GridMission():
 
         f.close()
 
+    def getGrid(self):
+        return list(self.result)
 
-fence = [
-(35.2465172031294, 33.0282678455114),#bot_left
-(35.2466111206525, 33.0283298715949),#top_left
-(35.2465089887636, 33.0285712704062),#top_right
-(35.2464167139972, 33.0285132676363)]#bot_right
-home = (35.2465186,	33.0282699)
+if __name__ == "__main__":
+    fence = [
+    (35.2465172031294, 33.0282678455114),#bot_left
+    (35.2466111206525, 33.0283298715949),#top_left
+    (35.2465089887636, 33.0285712704062),#top_right
+    (35.2464167139972, 33.0285132676363)]#bot_right
+    home = (35.2465186,	33.0282699)
 
-gm = GridMission(fence,home,"vertical",7)
-gm.export("asd.waypoints")
+    gm = GridMission(fence,home,"vertical",7)
+    gm.export("asd.waypoints")
