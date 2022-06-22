@@ -47,8 +47,9 @@ export const EditMission = () => {
         DroneServices.postMode(selected.id,"manual")
     }
 
-    function onRTLButtonClick() {
+    function onRTLButtonClick(selected) {
         console.log("rtl")
+        DroneServices.postMode(selected.id,"rtl")
     }
 
     function ShowMission(props) {
@@ -72,8 +73,8 @@ export const EditMission = () => {
                                 <input id="Name" type="text" disabled={true} value={device}></input>
                             </div>
                             <div className='col-6 d-flex flex-column'>
-                                <button onClick={onRTLButtonClick}>RTL</button>
-                                <button onClick={onMANUALButtonClick(selected)}>MANUAL</button>
+                                <button onClick={onRTLButtonClick.bind(this,selected)}>RTL</button>
+                                <button onClick={onMANUALButtonClick.bind(this,selected)}>MANUAL</button>
                             </div>
                         </div>
                     </div>
