@@ -25,37 +25,15 @@ export const UserMainPage = () => {
     const [isVitals, setIsVitals] = useState(true)
     //The drone 10 is used as test purpose directly instead of getting all drones.
     const fetchdata = async () => {
-        VitalServices.getVital(JSON.parse(sessionStorage.getItem("token")),10).then(function(response){
-            if (response.status === 200) { 
-              console.log(response) 
-              if(response.data.status === 403){
-                VitalServices.getLastLocation(JSON.parse(sessionStorage.getItem("token")),10).then(function(responseLastLocation){
-                  if (responseLastLocation.status === 200) { 
-                    console.log(responseLastLocation.data)
-                        vital_list[count].position1 = responseLastLocation.data[0]
-                        vital_list[count].position2 = responseLastLocation.data[1]
-                        vital_list[count].state = "Not connected"
-                        vital_list[count].battery_percentage = 0
-                        vital_list[count].battery_voltage = 0   
-                        count = count + 1
-                        setIsVitals(false)   
-                    }  
-                  }
-                );      
-              }
-              else{
-                vital_list[count].position1 = response.data.position[0]
-                vital_list[count].position2 = response.data.position[1]
-                vital_list[count].battery_percentage = response.data.battery_percentage
-                vital_list[count].battery_voltage = response.data.battery_voltage
-                vital_list[count].state = response.data.state
-                count = count + 1
-                setIsVitals(false)
-              }  
-              
-            }
+      let res = await VitalServices.getAllVitals(JSON.parse(sessionStorage.getItem("token")));
 
-        });
+      if (res.status === 200) {
+        let vitals = res.vitals;
+
+        // user vitals here
+        
+      }
+
     }
     useEffect(() => {
         fetchdata();
@@ -71,11 +49,11 @@ export const UserMainPage = () => {
     return (
         <>
             <LoginNavBar />
-            <div class="wrapper">
-                <div class="main">
+            <div className="wrapper">
+                <div className="main">
                     <Map/>
                 </div>
-                <div class="sidebar">
+                <div className="sidebar">
                     <Body />
                 </div>
             </div>
