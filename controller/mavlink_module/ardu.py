@@ -26,7 +26,7 @@ class Ardu:
             self.connect()
 
     def connect(self):
-        self.connection = mavutil.mavlink_connection(ARDU['ARDUPILOT_ADDRESS'])
+        self.connection = mavutil.mavlink_connection(ARDU['ARDUPILOT_ADDRESS'],baud=ARDU['ARDUPILOT_BAUD'])
         if self.connection.wait_heartbeat(timeout=5):
             self.connected_p()
 
