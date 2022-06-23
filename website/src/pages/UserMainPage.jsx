@@ -24,28 +24,28 @@ export const UserMainPage = () => {
       let vitals = res.vitals;
       for (let i = 0; i < vitals.length; i++) {
         console.log(vitals)
-        if(vitals[i].vitals.data.status === 403){
-            let last_location = await VitalServices.getLastLocation(JSON.parse(sessionStorage.getItem("token")),vitals[i].id)
-            vital_list[count].position1 = last_location.data[0]
-            vital_list[count].position2 = last_location.data[1]
-            vital_list[count].state = "Drone not connected"
-            vital_list[count].battery_percentage = 0
-            vital_list[count].battery_voltage = 0
-            count = count + 1
-            setIsVitals(false)
+        if (vitals[i].vitals.data.status === 403) {
+          let last_location = await VitalServices.getLastLocation(JSON.parse(sessionStorage.getItem("token")), vitals[i].id)
+          vital_list[count].position1 = last_location.data[0]
+          vital_list[count].position2 = last_location.data[1]
+          vital_list[count].state = "Drone not connected"
+          vital_list[count].battery_percentage = 0
+          vital_list[count].battery_voltage = 0
+          count = count + 1
+          setIsVitals(false)
         }
-        else{
-            vital_list[count].position1 = vitals[i].vitals.data.position[0]
-            vital_list[count].position2 = vitals[i].vitals.data.position[1]
-            vital_list[count].state = vitals[i].vitals.data.state
-            vital_list[count].battery_percentage = vitals[i].vitals.data.battery_percentage
-            vital_list[count].battery_voltage = vitals[i].vitals.data.battery_voltage
-            count = count + 1
-            setIsVitals(false)
+        else {
+          vital_list[count].position1 = vitals[i].vitals.data.position[0]
+          vital_list[count].position2 = vitals[i].vitals.data.position[1]
+          vital_list[count].state = vitals[i].vitals.data.state
+          vital_list[count].battery_percentage = vitals[i].vitals.data.battery_percentage
+          vital_list[count].battery_voltage = vitals[i].vitals.data.battery_voltage
+          count = count + 1
+          setIsVitals(false)
         }
-        
+
       }
-     
+
     }
 
   }
@@ -63,37 +63,56 @@ export const UserMainPage = () => {
   return (
     <>
       <LoginNavBar />
-      <div className="wrapper">
-        <div className="main">
-          <Map />
-        </div>
-        <div className="sidebar">
-          <Body />
+
+      <div className='container mt-5'>
+        <div className='row'>
+          <div className='col-6'>
+            <Map />
+          </div>
+          <div className='col-6'>
+            <div className="container">
+              <div className="column">
+                <div className="row-4 mb-5">
+                  <div className="card" style={{ width: "250px", backgroundColor: "#f0df99" }}>
+                    <div className='card-body'>
+                      <a href="CreateMission" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <img src={donatelloLogo} width="200px" alt="img" />
+                        <h5 className='card-title' align="center" style={{ fontSize: "30px", color: "#1a748e" }}>Create Mission</h5>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="row-4 mb-5">
+                  <div className="card" style={{ width: "250px", backgroundColor: "#f0df99" }}>
+                    <div className='card-body'>
+                      <a href="EditMission" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <img src={donatelloLogo} width="200px" alt="img" />
+                        <h5 className='card-title' align="center" style={{ fontSize: "30px", color: "#1a748e" }}>Edit Mission</h5>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="row-4">
+                  <div className="card" style={{ width: "250px", backgroundColor: "#f0df99" }}>
+                    <div className='card-body'>
+                      <a href="ReviewMission" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <img src={donatelloLogo} width="200px" alt="img" />
+                        <h5 className='card-title' align="center" style={{ fontSize: "30px", color: "#1a748e" }}>Review Mission</h5>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+
     </>
   );
 }
 
-
-function Body() {
-  return (
-    <div className="body-div">
-      <ul className="mission-list">
-        <li>
-          <a href="CreateMission" style={{ textDecoration: 'none', color: 'inherit' }}><Container name="Create Mission" /></a>
-
-        </li>
-        <li>
-          <a href="EditMission" style={{ textDecoration: 'none', color: 'inherit' }}><Container name="Edit Mission" /></a>
-        </li>
-        <li>
-          <a href="ReviewMission" style={{ textDecoration: 'none', color: 'inherit' }}><Container name="Review Mission" /></a>
-        </li>
-      </ul>
-    </div>
-  )
-}
 
 
 function Container(props) {

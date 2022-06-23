@@ -15,22 +15,26 @@ export default function ContactPage() {
 }
 
 function Body() {
-    return(
+    return (
         <>
-        <div className="body-div">
+            <div className="container mt-5">
+                <div className="row">
+                    <div className="col-4">
 
-            <ul className="info-list">
-                <li>
-                    <InformativeCard
-                        header="About us"        
-                        text="Donatello Kamplubaga is a..."                   
-                        img={donatelloLogo} />
-                </li>
-                    
-                </ul>
+                    </div>
+                    <div className="col-4">
+                        <InformativeCard
+                            header="About us"
+                            text="Donatello is an autonomous, solar powered sea vessel coming with remote control, scheduling and dashboard application which can perform cleaning operations on water. It is built by a graduation team from METU Northern Cyprus Campus."
+                            img={donatelloLogo} />
+                    </div>
+                    <div className="col-4">
 
+                    </div>
+                </div>
             </div>
-    </>
+
+        </>
     );
-    
+
 }

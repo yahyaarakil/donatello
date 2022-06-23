@@ -84,6 +84,13 @@ export const EditMission = () => {
         return (<></>);
     }
 
+    function toBool(num){
+        if (num === undefined) {
+            return 0;
+        }
+        return num.id;
+    }   
+
     return (
         <>
             <LoginNavBar />
@@ -110,7 +117,7 @@ export const EditMission = () => {
                                     <div className='col-6 page-hero d-flex align-items-center justify-content-center'>
                                         <select className="form-select" onClick={e => setVisible(!e.target.value)} onChange={e => setDevice(e.target.value)}>
                                             {/* hacky */}
-                                            <option key={-1} value={DEVICES[0].id}>select</option>
+                                            <option key={-1} value={toBool(DEVICES[0])}>select</option>
                                             {DEVICES.map((missionOptions) =><option key={missionOptions.id} value={missionOptions.id}>{missionOptions.id}</option>)}
                                         </select>
                                     </div>
