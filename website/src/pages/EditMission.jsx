@@ -68,9 +68,9 @@ export const EditMission = () => {
                         <div className='row'>
                             <div className='col-6 d-flex flex-column'>
                                 <label htmlFor="missionName">Mission Name:</label>
-                                <input id="missionName" type="text" disabled={true} value={device}></input>
+                                <input id="missionName" type="text" disabled={true} value={"Test Mission"}></input>
                                 <label htmlFor="Name">Name:</label>
-                                <input id="Name" type="text" disabled={true} value={device}></input>
+                                <input id="Name" type="text" disabled={true} value={"donatello_mk_2"}></input>
                             </div>
                             <div className='col-6 d-flex flex-column'>
                                 <button onClick={onRTLButtonClick.bind(this,selected)}>RTL</button>
