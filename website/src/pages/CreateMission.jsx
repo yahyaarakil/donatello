@@ -4,7 +4,6 @@ import LoginNavBar from './LoginNavBar';
 import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet';
 import { useRef, useState, useEffect } from 'react';
 import { EditControl } from "react-leaflet-draw"
-import { Navigate } from "react-router-dom";
 import DroneServices from "../services/DroneServices.js"
 import Select from "react-select";
 
@@ -99,7 +98,6 @@ function Body({ myVar, drones }) {
     const [name, setName] = useState("");
     const [battery, setBattery] = useState("");
 
-    const deviceRef = useRef();
     const [device, setDevice] = useState("");
 
     const [success, setSuccess] = useState("");
@@ -208,7 +206,6 @@ export const CreateMission = () => {
         right: 0,
     });
 
-    const dronesRef = useRef();
     const [drones, setDrones] = useState({})
 
     const fetchdata = async () => {

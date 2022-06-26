@@ -15,22 +15,26 @@ export default function ContactPage() {
 }
 
 function Body() {
-    return(
+    return (
         <>
-        <div className="body-div">
 
-            <ul className="info-list">
-                <li>
-                    <InformativeCard
-                        header="Contact Information"        
-                        text="You can reach us from: "                   
-                        img={donatelloLogo} />
-                </li>
-                    
-                </ul>
+            <div className="container mt-5">
+                <div className="row">
+                    <div className="col-4">
 
+                    </div>
+                    <div className="col-4">
+                        <InformativeCard
+                            header="Contact Information"
+                            text="You can reach us from following information for any purposes. Email: donatello.kaplumbaga@gmail.com"
+                            img={donatelloLogo} />
+                    </div>
+                    <div className="col-4">
+
+                    </div>
+                </div>
             </div>
-    </>
+        </>
     );
-    
+
 }

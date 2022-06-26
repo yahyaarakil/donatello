@@ -2,7 +2,7 @@ import '../styles/LoginNavBar.css';
 import donatelloLogo from "../images/donatello-logo.png";
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faHouse,faBell,faUser,faGear,faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faHouse,faUser,faGear,faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function LoginNavBar() {
