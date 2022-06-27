@@ -1,6 +1,6 @@
 # 🐢 Donatello Kaplumbaga: A semi-autonomous sea surface cleaning rover.
 
-## 💫  What is Donatello?
+## 🤔  What is Donatello?
 Donatello is a semi-autonomous coastline cleaning vessel. It allows for an easy and low cost approach for cleaning coastline sea surfaces.
 **Donatello Kaplumbaga** is a [METU NCC](https://ncc.metu.edu.tr/) multidisciplinary graduation project by the [Computer Engineering](https://ncc.metu.edu.tr/cng/home) & [Electrical/Electronic Engineering](https://ncc.metu.edu.tr/eee/home) departments.
 
