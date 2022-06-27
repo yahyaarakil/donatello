@@ -1,7 +1,10 @@
 # 🐢 Donatello Kaplumbaga: A semi-autonomous sea surface cleaning rover.
 
-The **DK** rover software is composed of 3 parts, the rover controller, the webserver, and the web application.
-**DK** is a [METU NCC](https://ncc.metu.edu.tr/) multidisciplinary graduation project by the [Computer Engineering](https://ncc.metu.edu.tr/cng/home) & [Electrical/Electronic Engineering](https://ncc.metu.edu.tr/eee/home) departments.
+## 💫  What is Donatello?
+Donatello is a semi-autonomous coastline cleaning vessel. It allows for an easy and low cost approach for cleaning coastline sea surfaces.
+**Donatello Kaplumbaga** is a [METU NCC](https://ncc.metu.edu.tr/) multidisciplinary graduation project by the [Computer Engineering](https://ncc.metu.edu.tr/cng/home) & [Electrical/Electronic Engineering](https://ncc.metu.edu.tr/eee/home) departments.
+
+The **Donatello Kaplumbaga** rover software is composed of 3 parts, the rover controller, the webserver, and the web application.
 
 ## 💫  Features
  - 🤖 Autonomous cleaning operation
@@ -36,3 +39,5 @@ The **DK** rover software is composed of 3 parts, the rover controller, the webs
     2. Navigate to `cd donatello/website`
     3. Initialize the server dependencies `npm install`
     4. Start the application `npm start`
+
+## ⚙️ Under the hood
