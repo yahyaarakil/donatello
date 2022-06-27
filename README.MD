@@ -43,14 +43,14 @@ The **Donatello Kaplumbaga** rover software is composed of 3 parts, the rover co
     4. Start the application `npm start`
 
 ## ⚙️ Under the hood
-Donatello Vessel Prototype
+ - Donatello Vessel Prototype\
 ![Main](https://github.com/yahyaarakil/donatello/blob/main/images/body_image.png)
 
-System
+ - System\
 ![Main](https://github.com/yahyaarakil/donatello/blob/main/images/system_image.png)
 
-Controller Framework
-![Main](https://github.com/yahyaarakil/donatello/blob/main/images/framework_image.png)
+ - Controller Framework\
+![Main](https://github.com/yahyaarakil/donatello/blob/main/images/frameword_image.png)
 
-Server
+ - Server\
 ![Main](https://github.com/yahyaarakil/donatello/blob/main/images/server_image.png)
