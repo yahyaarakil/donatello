@@ -4,8 +4,28 @@ The **DK** rover software is composed of 3 parts, the rover controller, the webs
 **DK** is a [METU NCC](https://ncc.metu.edu.tr/) multidisciplinary graduation project by the [Computer Engineering](https://ncc.metu.edu.tr/cng/home) & [Electrical/Electronic Engineering](https://ncc.metu.edu.tr/eee/home) departments.
 
 ## 💫  Features
+ - 🤖 Autonomous cleaning operation
+ - 👤 Easy to use interface
+ - 🛤️ Comprehensive vessel tracking
+ - 🌞 Sustainable energy source (solar)
+ - 🧮 Extensible framework
+ - 🚚 Fleet management
+ - 📅 Mission scheduling
 
 ## 📖 Setting up and running the different software parts
- - ### [Rover Controller](#)
- - ### [Web Server](#)
- - ### [Web Application](#)
+ - ### [🕹️ Rover Controller](#)
+    The rover controller should be installed on the raspberry pi within the vessel system.
+    1. Clone the repository to the raspberry pi `git clone https://github.com/yahyaarakil/donatello.git`
+    2. Edit the `donatello/controller/config.py` file by creating a unique drone identifier and changing the ARDUPILOT_ADDRESS to `/dev/ttyACM0` for the USB address or `localhost:5762` for the simulation
+    3. And make sure the SERVER_ADDRESS is set to the correct server IP address, usually `localhost:8080`
+    4. Start the `donatello/controller/donatello_start.py` file
+ - ### [📡 Web Server](#)
+    1. Install NPM
+    2. Navigate to `cd donatello/server`
+    3. Initialize the server dependencies `npm install`
+    4. Start the server `npm run server`
+ - ### [📱 Web Application](#)
+    1. Install NPM
+    2. Navigate to `cd donatello/website`
+    3. Initialize the server dependencies `npm install`
+    4. Start the application `npm start`
