@@ -23,7 +23,14 @@ The **DK** rover software is composed of 3 parts, the rover controller, the webs
     1. Install NPM
     2. Navigate to `cd donatello/server`
     3. Initialize the server dependencies `npm install`
-    4. Start the server `npm run server`
+    4. Setup the `.env` file with the parameters
+       1. MONGODB_URL="<URL>"
+       2. MONGODB_TEST_URL="<TEST_URL>"
+       3. HTTPS_PORT=8080
+       4. WSS_PORT=5050
+       5. TOKEN_SIGNATURE_KEY="<TOKEN KEY>"
+       6. APP_ORIGIN="*"
+    5. Start the server `npm run server`
  - ### [📱 Web Application](#)
     1. Install NPM
     2. Navigate to `cd donatello/website`
