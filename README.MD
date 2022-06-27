@@ -4,6 +4,8 @@
 Donatello is a semi-autonomous coastline cleaning vessel. It allows for an easy and low cost approach for cleaning coastline sea surfaces.
 **Donatello Kaplumbaga** is a [METU NCC](https://ncc.metu.edu.tr/) multidisciplinary graduation project by the [Computer Engineering](https://ncc.metu.edu.tr/cng/home) & [Electrical/Electronic Engineering](https://ncc.metu.edu.tr/eee/home) departments.
 
+![Main](https://github.com/yahyaarakil/donatello/blob/main/images/main_image.png)
+
 The **Donatello Kaplumbaga** rover software is composed of 3 parts, the rover controller, the webserver, and the web application.
 
 ## 💫  Features
@@ -41,3 +43,14 @@ The **Donatello Kaplumbaga** rover software is composed of 3 parts, the rover co
     4. Start the application `npm start`
 
 ## ⚙️ Under the hood
+ - Donatello Vessel Prototype
+![Main](https://github.com/yahyaarakil/donatello/blob/main/images/body_image.png)
+
+ - System
+![Main](https://github.com/yahyaarakil/donatello/blob/main/images/system_image.png)
+
+ - Controller Framework
+![Main](https://github.com/yahyaarakil/donatello/blob/main/images/framework_image.png)
+
+ - Server
+![Main](https://github.com/yahyaarakil/donatello/blob/main/images/server_image.png)
