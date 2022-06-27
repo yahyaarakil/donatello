@@ -44,13 +44,18 @@ The **Donatello Kaplumbaga** rover software is composed of 3 parts, the rover co
 
 ## ⚙️ Under the hood
  - Donatello Vessel Prototype\
-![Main](https://github.com/yahyaarakil/donatello/blob/main/images/body_image.png)
+![Vessel](https://github.com/yahyaarakil/donatello/blob/main/images/body_image.png)
 
  - System\
-![Main](https://github.com/yahyaarakil/donatello/blob/main/images/system_image.png)
+![System](https://github.com/yahyaarakil/donatello/blob/main/images/system_image.png)
 
  - Controller Framework\
-![Main](https://github.com/yahyaarakil/donatello/blob/main/images/frameword_image.png)
+![Framework](https://github.com/yahyaarakil/donatello/blob/main/images/frameword_image.png)
 
  - Server\
-![Main](https://github.com/yahyaarakil/donatello/blob/main/images/server_image.png)
+![Server](https://github.com/yahyaarakil/donatello/blob/main/images/server_image.png)
+
+## ✅ Sponsor
+ - This project was sponsored by K-Pet\
+![KPET](https://ktpetrolleri.com/wp-content/uploads/2021/10/k-pet_logo.png)\
+[KPET](https://ktpetrolleri.com/odtu/)
